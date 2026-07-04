@@ -1027,6 +1027,14 @@ function frame(){
     window.dataLayer=window.dataLayer||[];
     window.dataLayer.push({event:'gateway_station',station:STOPS[near].l});
   }
+  /* the ouroboros: the end frames the same view as the beginning — rest a beat, then rebase
+     invisibly to the top so the next scroll travels the system again */
+  if(target>=.999&&p>.998){
+    if(!frame.endT)frame.endT=performance.now();
+    else if(performance.now()-frame.endT>700){
+      frame.endT=0;window.scrollTo(0,0);target=0;p=0;lastP=0;tilt=0;settling=false;lastMove=performance.now();
+    }
+  }else frame.endT=0;
   /* soft settle: after the wheel rests, glide to the nearest station — the wheel always wins */
   if(!settling&&performance.now()-lastMove>750&&Math.abs(target-p)<.002){
     var nr=Math.round(target*n)/n, gap=Math.abs(target-nr);
