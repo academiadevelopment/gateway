@@ -1,3 +1,3 @@
 The Academia Group gateway.
 
-Staging: academia-gateway.html + academia-3d.html
+Staging: academia-gateway.html (travel build)
