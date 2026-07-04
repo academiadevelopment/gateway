@@ -29,12 +29,23 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Encode+Sans+Expanded:wght@300;400;500&family=Playfair+Display:ital@0;1&family=Inter:wght@400&display=swap" rel="stylesheet">
 <link href="https://fonts.cdnfonts.com/css/azonix" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
 <style>
   html{background:#0A1322}
   html,body{margin:0;padding:0;min-height:100vh;overflow-x:hidden}
   body{display:flex;justify-content:center;background-color:#0A1322;
     background-image:radial-gradient(110rem 110rem at 50% 38%, #0F1F31 0%, #0A1322 70%);
     background-size:100% 100%;background-attachment:fixed}
+  /* the cuadriculado — the whole viewport is the graph paper; a crossing sits at dead center */
+  body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+    background-image:linear-gradient(rgba(135,175,225,.085) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(135,175,225,.085) 1px,transparent 1px);
+    background-size:40px 40px;background-position:calc(50% - 20px) calc(50% - 20px)}
+  /* instant tooltips — every door announces itself with zero delay */
+  #tip{position:fixed;z-index:12;pointer-events:none;opacity:0;transition:opacity .12s;
+    font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;color:#EEF3FA;
+    background:rgba(13,25,42,.95);border:1px solid rgba(192,133,82,.55);border-radius:8px;
+    padding:8px 12px;max-width:320px;line-height:1.5;backdrop-filter:blur(4px)}
   #plate{width:min(100vw,980px);height:auto;display:block}
   .disp{font-family:'Azonix','Arial Narrow',sans-serif}
   .mono{font-family:'IBM Plex Mono','SF Mono',Menlo,monospace}
@@ -110,6 +121,20 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   .stickycta:hover{color:#0A1322;background:#7DE8FF;box-shadow:0 0 26px rgba(125,232,255,.75)}
   @keyframes ctapulse{50%{box-shadow:0 0 24px rgba(125,232,255,.6),0 0 48px rgba(125,232,255,.28)}}
   @media (max-width:640px){.stickycta{left:16px;right:16px;text-align:center;font-size:13.5px;padding:15px 20px}}
+  #gl{position:fixed;inset:0;z-index:2;pointer-events:none}
+  /* ---- the travel: the plate is the world; scroll is the camera ---- */
+  #cam{position:fixed;inset:0;z-index:1}
+  #cam svg{position:absolute;left:0;top:0;transform-origin:0 0;will-change:transform}
+  #camspacer{width:1px}
+  #journey{position:fixed;right:16px;top:50%;transform:translateY(-50%);z-index:6;display:flex;flex-direction:column;gap:14px}
+  #journey button{display:flex;align-items:center;gap:9px;background:none;border:none;cursor:pointer;padding:2px;justify-content:flex-end}
+  #journey .jl{font-family:'IBM Plex Mono',monospace;font-size:8.5px;letter-spacing:.22em;color:#AEBDD0;opacity:0;transform:translateX(6px);transition:opacity .2s,transform .2s;white-space:nowrap}
+  #journey button:hover .jl,#journey button.on .jl{opacity:.95;transform:none}
+  #journey .jd{width:7px;height:7px;border-radius:50%;border:1px solid #7FA3D0;background:transparent;transition:all .25s;flex:none}
+  #journey button.on .jd{background:#E0A060;border-color:#E0A060;box-shadow:0 0 8px rgba(224,160,96,.7)}
+  #travelhint{position:fixed;bottom:15px;left:50%;transform:translateX(-50%);z-index:6;font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.3em;color:#7DE8FF;opacity:.7;transition:opacity .8s;pointer-events:none}
+  @media (max-width:700px){#journey,#travelhint{display:none}}
+  @media (prefers-reduced-motion: reduce){#journey,#travelhint{display:none}}
   .fade{opacity:0;animation:appear 1.1s ease forwards}
   /* Fibonacci cascade: 1 1 2 3 5 8 13 (÷10) */
   .f1{animation-delay:.1s}.f2{animation-delay:.2s}.f3{animation-delay:.3s}.f4{animation-delay:.5s}.f5{animation-delay:.8s}.f6{animation-delay:1.3s}
@@ -142,8 +167,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </filter>
   </defs>
 
-  <!-- the cuadriculado — 40px sacred unit, lines pass through the aether center (500,700); rings at 3u · 6u · 9u -->
-  <rect x="0" y="0" width="1000" height="1618" fill="url(#grid40)"/>
+  <!-- the cuadriculado now covers the entire viewport (body layer) — a crossing registers at dead center -->
+
 
   <!-- drifting motes -->
   <g fill="#EEF3FA">
@@ -163,10 +188,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   <!-- the four elements as live platonic solids, at the four corners; the fifth at center -->
   <g class="fade f6">
-    <a href="https://academiarealestatecorp.com/about#whole"><title>Fire — tetrahedron · After Plato, Timaeus</title><circle cx="82" cy="76" r="42" fill="transparent"/><g id="solid-fire"></g></a>
-    <a href="https://academiarealestatecorp.com/about#whole"><title>Air — octahedron · After Plato, Timaeus</title><circle cx="918" cy="76" r="42" fill="transparent"/><g id="solid-air"></g></a>
-    <a href="https://academiarealestatecorp.com/about#whole"><title>Water — icosahedron · After Plato, Timaeus</title><circle cx="82" cy="1560" r="42" fill="transparent"/><g id="solid-water"></g></a>
-    <a href="https://academiarealestatecorp.com/about#whole"><title>Earth — hexahedron · After Plato, Timaeus</title><circle cx="918" cy="1560" r="42" fill="transparent"/><g id="solid-earth"></g></a>
+    <a href="https://academiarealestatecorp.com/about#whole"><title>Fire — tetrahedron · After Plato, Timaeus</title><circle id="hit-fire" cx="82" cy="76" r="42" fill="transparent"/><g id="solid-fire"></g></a>
+    <a href="https://academiarealestatecorp.com/about#whole"><title>Air — octahedron · After Plato, Timaeus</title><circle id="hit-air" cx="918" cy="76" r="42" fill="transparent"/><g id="solid-air"></g></a>
+    <a href="https://academiarealestatecorp.com/about#whole"><title>Water — icosahedron · After Plato, Timaeus</title><circle id="hit-water" cx="82" cy="1560" r="42" fill="transparent"/><g id="solid-water"></g></a>
+    <a href="https://academiarealestatecorp.com/about#whole"><title>Earth — hexahedron · After Plato, Timaeus</title><circle id="hit-earth" cx="918" cy="1560" r="42" fill="transparent"/><g id="solid-earth"></g></a>
   </g>
 
   <!-- ================= HEADER ================= -->
@@ -245,7 +270,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <animate attributeName="stroke-dashoffset" from="12" to="0" dur="1.1s" repeatCount="indefinite"/>
   </g>
   <a href="https://academiarealestatecorp.com/about#whole"><title>Æther — the dodecahedron · 3 6 9 · the whole</title>
-    <circle cx="500" cy="700" r="22" fill="#0F1F31" stroke="#C08552" stroke-width="2"/>
+    <circle id="hit-center" cx="500" cy="700" r="22" fill="#0F1F31" stroke="#C08552" stroke-width="2"/>
     <g id="solid-center" filter="url(#coreglow)"></g>
     <g><rect x="440" y="737" width="120" height="15" fill="#0A1322"/>
     <text x="500" y="748" class="mono cop" font-size="8" text-anchor="middle" letter-spacing="1.5">ÆTHER — THE WHOLE</text></g>
@@ -696,8 +721,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     });
   });
   var reduced=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduced){var _pl=document.getElementById('plate');if(_pl&&_pl.pauseAnimations)_pl.pauseAnimations();}
   var K=3.1;
   function frame(t){
+    if(window.__gl3d){if(!reduced)requestAnimationFrame(frame);return;}
     solids.forEach(function(o){
       var a=t*o.sa,b=t*o.sb,c=t*o.sa*0.37,
           ca=Math.cos(a),sa=Math.sin(a),cb=Math.cos(b),sb=Math.sin(b),
@@ -762,6 +789,286 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   fitPlate();
   window.addEventListener('resize', fitPlate);
   window.addEventListener('orientationchange', function(){ setTimeout(fitPlate, 250); });
+})();
+</script>
+<script>
+/* Timaeus dimensional layer — WebGL glass solids glued to the same five marks.
+   Rungs: no THREE / no WebGL → the 2D wireframes above keep running untouched.
+   Rotation periods are Fibonacci seconds (13 · 21 · 34 · 55) — for whoever notices. */
+(function(){
+'use strict';
+var reduced=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+var TAU=Math.PI*2;
+function init(){
+  if(!window.THREE) return;
+  var renderer;
+  try{
+    renderer=new THREE.WebGLRenderer({antialias:true,alpha:true,powerPreference:'low-power'});
+  }catch(e){return;}
+  var plate=document.getElementById('plate');
+  var SPEC=[
+    {id:'solid-center',hit:'hit-center',kind:'dode', ratio:15.5/22, base:0xE0A060, hot:0xFFD9A0, spy:TAU/34, spx:TAU/55},
+    {id:'solid-fire',  hit:'hit-fire',  kind:'tetra',ratio:16/42,   base:0x9FB2C9, hot:0xE0A060, spy:TAU/21, spx:TAU/34},
+    {id:'solid-air',   hit:'hit-air',   kind:'octa', ratio:15/42,   base:0x9FB2C9, hot:0xE0A060, spy:-TAU/21,spx:TAU/55},
+    {id:'solid-water', hit:'hit-water', kind:'ico',  ratio:14.5/42, base:0x9FB2C9, hot:0xE0A060, spy:TAU/13, spx:-TAU/34},
+    {id:'solid-earth', hit:'hit-earth', kind:'cube', ratio:13.5/42, base:0x9FB2C9, hot:0xE0A060, spy:-TAU/13,spx:TAU/21}
+  ];
+  var ok=SPEC.every(function(s){return document.getElementById(s.id)&&document.getElementById(s.hit)});
+  if(!ok||!plate){renderer.dispose&&renderer.dispose();return;}
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
+  renderer.setSize(window.innerWidth,window.innerHeight);
+  var el=renderer.domElement; el.id='gl'; el.setAttribute('aria-hidden','true');
+  document.body.appendChild(el);
+  var scene=new THREE.Scene();
+  var camera=new THREE.OrthographicCamera(0,window.innerWidth,0,-window.innerHeight,-2000,2000);
+  var key=new THREE.DirectionalLight(0xF2EEE6,.85); key.position.set(-.45,.65,1); scene.add(key);
+  var rim=new THREE.DirectionalLight(0x7FA3D0,.65); rim.position.set(.5,-.4,-.9); scene.add(rim);
+  scene.add(new THREE.AmbientLight(0x33455F,.6));
+  function geoFor(kind){
+    switch(kind){
+      case 'dode': return new THREE.DodecahedronGeometry(1,0);
+      case 'tetra':return new THREE.TetrahedronGeometry(1,0);
+      case 'octa': return new THREE.OctahedronGeometry(1,0);
+      case 'ico':  return new THREE.IcosahedronGeometry(1,0);
+      case 'cube': return new THREE.BoxGeometry(1.155,1.155,1.155);
+    }
+  }
+  var marks=SPEC.map(function(s,i){
+    var geo=geoFor(s.kind);
+    var grp=new THREE.Group();
+    var faceMat=new THREE.MeshStandardMaterial({color:0x16263F,metalness:.4,roughness:.3,
+      transparent:true,opacity:s.kind==='dode'?.22:.16,depthWrite:false,side:THREE.DoubleSide});
+    var edgeMat=new THREE.LineBasicMaterial({color:s.base,transparent:true,opacity:.95});
+    var dotMat=new THREE.PointsMaterial({color:s.base,size:s.kind==='dode'?2.6:2.2,
+      sizeAttenuation:false,transparent:true,opacity:.85});
+    grp.add(new THREE.Mesh(geo,faceMat));
+    grp.add(new THREE.LineSegments(new THREE.EdgesGeometry(geo),edgeMat));
+    grp.add(new THREE.Points(geo,dotMat));
+    grp.rotation.set(.4+i*.7,.9+i*1.3,.15*i);
+    scene.add(grp);
+    var m={node:grp,edge:edgeMat,dot:dotMat,hitEl:document.getElementById(s.hit),
+      ratio:s.ratio,spy:s.spy,spx:s.spx,hover:false,scale:1,
+      cBase:new THREE.Color(s.base),cHot:new THREE.Color(s.hot),cCur:new THREE.Color(s.base)};
+    var a=m.hitEl.closest&&m.hitEl.closest('a');
+    if(a){
+      a.addEventListener('mouseenter',function(){m.hover=true;});
+      a.addEventListener('mouseleave',function(){m.hover=false;});
+      a.addEventListener('focus',function(){m.hover=true;});
+      a.addEventListener('blur',function(){m.hover=false;});
+    }
+    return m;
+  });
+  /* hand-off: hide the 2D wireframes, keep them as the instant fallback */
+  SPEC.forEach(function(s){document.getElementById(s.id).style.display='none';});
+  window.__gl3d=true;
+  el.addEventListener('webglcontextlost',function(ev){
+    ev.preventDefault();
+    SPEC.forEach(function(s){document.getElementById(s.id).style.display='';});
+    window.__gl3d=false; el.style.display='none';
+  },false);
+  function place(){
+    var pr=plate.getBoundingClientRect();
+    marks.forEach(function(m){
+      var r=m.hitEl.getBoundingClientRect();
+      var cy=r.top+r.height/2;
+      var vis=r.width>2 && cy>pr.top-4 && cy<pr.bottom+4 && r.bottom>-60 && r.top<window.innerHeight+60;
+      m.node.visible=vis;
+      if(!vis)return;
+      m.node.position.set(r.left+r.width/2,-cy,0);
+      m.node.scale.setScalar(Math.max((r.width/2)*m.ratio*m.scale,.001));
+    });
+  }
+  function onResize(){
+    renderer.setSize(window.innerWidth,window.innerHeight);
+    camera.right=window.innerWidth;camera.bottom=-window.innerHeight;
+    camera.updateProjectionMatrix();
+    if(reduced)still();
+  }
+  window.addEventListener('resize',onResize);
+  var running=!document.hidden,last=0;
+  document.addEventListener('visibilitychange',function(){
+    running=!document.hidden;
+    if(running&&!reduced){last=0;requestAnimationFrame(loop);}
+  });
+  function loop(t){
+    if(!running)return;
+    requestAnimationFrame(loop);
+    var dt=last?Math.min((t-last)/1000,.05):.016; last=t;
+    marks.forEach(function(m){
+      m.node.rotation.y+=m.spy*dt*(m.hover?1.8:1);
+      m.node.rotation.x+=m.spx*dt;
+      m.scale+=((m.hover?1.24:1)-m.scale)*.12;
+      m.cCur.lerp(m.hover?m.cHot:m.cBase,.14);
+      m.edge.color.copy(m.cCur);m.dot.color.copy(m.cCur);
+    });
+    place();
+    renderer.render(scene,camera);
+  }
+  function still(){place();renderer.render(scene,camera);}
+  if(reduced){
+    marks.forEach(function(m){m.node.rotation.set(.5,.85,.1);});
+    still();
+    window.addEventListener('scroll',still,{passive:true});
+    return;
+  }
+  requestAnimationFrame(loop);
+}
+function start(){
+  if('requestIdleCallback' in window)requestIdleCallback(init,{timeout:1500});
+  else setTimeout(init,400);
+}
+(function boot(){
+  if(window.THREE){start();return;}
+  var n=0,iv=setInterval(function(){
+    if(window.THREE){clearInterval(iv);start();}
+    else if(++n>120){clearInterval(iv);}
+  },100);
+})();
+})();
+</script>
+<script>
+/* THE TRAVEL — the approved plate, untouched, becomes the world; scroll flies the camera through it.
+   Zoom breathes in φ; the flight is damped by 1/φ²; nothing new is drawn. */
+(function(){
+'use strict';
+var reduced=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+if(reduced||window.innerWidth<700)return;   /* mobile & reduced keep the approved experience */
+var PHI=(1+Math.sqrt(5))/2;
+var svg=document.getElementById('plate'); if(!svg)return;
+/* wrap the plate in a fixed camera stage */
+var cam=document.createElement('div');cam.id='cam';
+svg.parentNode.insertBefore(cam,svg);cam.appendChild(svg);
+var spacer=document.createElement('div');spacer.id='camspacer';document.body.appendChild(spacer);
+var hint=document.createElement('div');hint.id='travelhint';hint.textContent='SCROLL — TRAVEL THE SYSTEM';document.body.appendChild(hint);
+/* the stations of the journey — regions of the plate, in its own coordinates (cy includes the +100 shift; z = SVG units visible vertically) */
+/* z = SVG units the viewport must show vertically · w = units it must show horizontally.
+   The camera fits BOTH, so no station is ever cropped on any aspect ratio. */
+var STOPS=[
+  {l:'THE WHOLE',        cx:500,cy:809, z:1700,w:1020},
+  {l:'THE LIFECYCLE',    cx:500,cy:104, z:400, w:1020},
+  {l:'THE MARK',         cx:500,cy:283, z:360, w:700},
+  {l:'ÆTHER · LICENSURE',cx:500,cy:800, z:620, w:660},
+  {l:'CONSTRUCTION',     cx:500,cy:800, z:1030,w:1010},
+  {l:'BROKERAGE',        cx:500,cy:800, z:1310,w:1030},
+  {l:'THE SEAL',         cx:500,cy:1398,z:440, w:940},
+  {l:'THE WHOLE',        cx:500,cy:809, z:1700,w:1020}
+];
+var nav=document.createElement('nav');nav.id='journey';nav.setAttribute('aria-label','Journey');
+var jbtns=[];
+for(var i=0;i<STOPS.length-1;i++){
+  (function(i){
+    var b=document.createElement('button');
+    b.innerHTML='<span class="jl">'+STOPS[i].l+'</span><span class="jd"></span>';
+    b.addEventListener('click',function(){
+      var m=Math.max(document.documentElement.scrollHeight-window.innerHeight,1);
+      window.scrollTo({top:i/(STOPS.length-1)*m,behavior:'smooth'});
+    });
+    nav.appendChild(b);jbtns.push(b);
+  })(i);
+}
+document.body.appendChild(nav);
+var W;
+function layout(){
+  W=Math.min(window.innerWidth,980);
+  svg.style.width=W+'px';
+  spacer.style.height=Math.round(window.innerHeight*4.6)+'px';
+}
+layout();
+var target=0,p=0,lastP=0,tilt=0,DAMP=1/(PHI*PHI); /* .382 */
+var lastMove=performance.now(),settling=false;
+function onScroll(){
+  var m=Math.max(document.documentElement.scrollHeight-window.innerHeight,1);
+  target=Math.min(window.scrollY/m,1);
+  if(window.scrollY>40)hint.style.opacity='0';
+}
+window.addEventListener('scroll',onScroll,{passive:true});onScroll();
+window.addEventListener('wheel',function(){lastMove=performance.now();settling=false;},{passive:true});
+window.addEventListener('touchmove',function(){lastMove=performance.now();settling=false;},{passive:true});
+/* keyboard flight: arrows step between stations */
+window.addEventListener('keydown',function(e){
+  var d=0;
+  if(e.key==='ArrowDown'||e.key==='ArrowRight')d=1;
+  else if(e.key==='ArrowUp'||e.key==='ArrowLeft')d=-1;
+  else return;
+  e.preventDefault();
+  var n=STOPS.length-1;
+  var cur=Math.round(target*n)+d;cur=Math.max(0,Math.min(cur,n));
+  var m=Math.max(document.documentElement.scrollHeight-window.innerHeight,1);
+  settling=true;window.scrollTo({top:cur/n*m,behavior:'smooth'});
+});
+window.addEventListener('resize',function(){
+  if(window.innerWidth<700){location.reload();return;}
+  layout();onScroll();
+});
+function ease(x){return x*x*(3-2*x)}
+function frame(){
+  requestAnimationFrame(frame);
+  p+=(target-p)*DAMP*.72;
+  if(Math.abs(target-p)<.00003)p=target;
+  var n=STOPS.length-1, seg=Math.min(p*n,n-.0001), i=Math.floor(seg), f=ease(seg-i);
+  var A=STOPS[i],B=STOPS[i+1];
+  var cx=A.cx+(B.cx-A.cx)*f, cy=A.cy+(B.cy-A.cy)*f;
+  var z=Math.exp(Math.log(A.z)+(Math.log(B.z)-Math.log(A.z))*f); /* zoom glides in log space */
+  var w=Math.exp(Math.log(A.w)+(Math.log(B.w)-Math.log(A.w))*f);
+  var ppu=W/1000;
+  var s=Math.min(window.innerHeight/(z*ppu), window.innerWidth*.965/(w*ppu));
+  var tx=window.innerWidth/2-cx*ppu*s;
+  var ty=window.innerHeight/2-cy*ppu*s;
+  svg.style.transform='translate3d('+tx.toFixed(2)+'px,'+ty.toFixed(2)+'px,0) scale('+s.toFixed(4)+')';
+  /* a breath of bank while moving — decays to dead level at rest */
+  var v=(p-lastP);lastP=p;
+  tilt+=((Math.max(Math.min(v*260,1.6),-1.6))-tilt)*.06;
+  cam.style.transform='perspective(1600px) rotateX('+tilt.toFixed(3)+'deg)';
+  /* index light + station analytics */
+  var near=Math.round(p*n);if(near>=jbtns.length)near=jbtns.length-1;
+  for(var k=0;k<jbtns.length;k++)jbtns[k].classList.toggle('on',k===near);
+  if(near!==frame.lastNear&&Math.abs(target-p)<.01){
+    frame.lastNear=near;
+    window.dataLayer=window.dataLayer||[];
+    window.dataLayer.push({event:'gateway_station',station:STOPS[near].l});
+  }
+  /* soft settle: after the wheel rests, glide to the nearest station — the wheel always wins */
+  if(!settling&&performance.now()-lastMove>750&&Math.abs(target-p)<.002){
+    var nr=Math.round(target*n)/n, gap=Math.abs(target-nr);
+    if(gap>.004&&gap<.06){
+      settling=true;
+      var m=Math.max(document.documentElement.scrollHeight-window.innerHeight,1);
+      window.scrollTo({top:nr*m,behavior:'smooth'});
+    }
+  }
+}
+requestAnimationFrame(frame);
+})();
+/* ---- interaction layer: instant tooltips + door analytics (all devices) ---- */
+(function(){
+'use strict';
+var tip=document.createElement('div');tip.id='tip';document.body.appendChild(tip);
+var fine=window.matchMedia&&window.matchMedia('(pointer:fine)').matches;
+if(fine){
+  document.addEventListener('mouseover',function(e){
+    var a=e.target.closest&&e.target.closest('a');
+    if(!a||!a.closest('svg')){tip.style.opacity='0';return;}
+    var t=a.getAttribute('data-tip');
+    if(!t){var tl=a.querySelector('title');
+      if(tl){t=tl.textContent;a.setAttribute('data-tip',t);a.setAttribute('aria-label',t);tl.parentNode.removeChild(tl);}}
+    if(t){tip.textContent=t;tip.style.opacity='1';}
+  });
+  document.addEventListener('mousemove',function(e){
+    var x=Math.min(e.clientX+16,window.innerWidth-340),y=Math.min(e.clientY+18,window.innerHeight-60);
+    tip.style.left=x+'px';tip.style.top=y+'px';
+  },{passive:true});
+  document.addEventListener('mouseout',function(e){
+    if(e.target.closest&&e.target.closest('a'))tip.style.opacity='0';
+  });
+}
+/* every door click reports to GTM — with thousands of visitors, this is the map of demand */
+document.addEventListener('click',function(e){
+  var a=e.target.closest&&e.target.closest('a[href]');if(!a)return;
+  window.dataLayer=window.dataLayer||[];
+  window.dataLayer.push({event:'gateway_door',
+    door:(a.getAttribute('data-tip')||a.getAttribute('aria-label')||(a.textContent||'').trim()||a.href).slice(0,80),
+    href:a.href});
+});
 })();
 </script>
 </body>
