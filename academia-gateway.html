@@ -941,15 +941,17 @@ svg.parentNode.insertBefore(cam,svg);cam.appendChild(svg);
 var spacer=document.createElement('div');spacer.id='camspacer';document.body.appendChild(spacer);
 var hint=document.createElement('div');hint.id='travelhint';hint.textContent='SCROLL — TRAVEL THE SYSTEM';document.body.appendChild(hint);
 /* the stations of the journey — regions of the plate, in its own coordinates (cy includes the +100 shift; z = SVG units visible vertically) */
+/* z = SVG units the viewport must show vertically · w = units it must show horizontally.
+   The camera fits BOTH, so no station is ever cropped on any aspect ratio. */
 var STOPS=[
-  {l:'THE WHOLE',        cx:500,cy:809, z:1700},
-  {l:'THE LIFECYCLE',    cx:500,cy:104, z:400},
-  {l:'THE MARK',         cx:500,cy:283, z:360},
-  {l:'ÆTHER · LICENSURE',cx:500,cy:800, z:620},
-  {l:'CONSTRUCTION',     cx:500,cy:800, z:1030},
-  {l:'BROKERAGE',        cx:500,cy:800, z:1310},
-  {l:'THE SEAL',         cx:500,cy:1398,z:440},
-  {l:'THE WHOLE',        cx:500,cy:809, z:1700}
+  {l:'THE WHOLE',        cx:500,cy:809, z:1700,w:1020},
+  {l:'THE LIFECYCLE',    cx:500,cy:104, z:400, w:1020},
+  {l:'THE MARK',         cx:500,cy:283, z:360, w:700},
+  {l:'ÆTHER · LICENSURE',cx:500,cy:800, z:620, w:660},
+  {l:'CONSTRUCTION',     cx:500,cy:800, z:1030,w:1010},
+  {l:'BROKERAGE',        cx:500,cy:800, z:1310,w:1030},
+  {l:'THE SEAL',         cx:500,cy:1398,z:440, w:940},
+  {l:'THE WHOLE',        cx:500,cy:809, z:1700,w:1020}
 ];
 var nav=document.createElement('nav');nav.id='journey';nav.setAttribute('aria-label','Journey');
 var jbtns=[];
@@ -1007,8 +1009,9 @@ function frame(){
   var A=STOPS[i],B=STOPS[i+1];
   var cx=A.cx+(B.cx-A.cx)*f, cy=A.cy+(B.cy-A.cy)*f;
   var z=Math.exp(Math.log(A.z)+(Math.log(B.z)-Math.log(A.z))*f); /* zoom glides in log space */
+  var w=Math.exp(Math.log(A.w)+(Math.log(B.w)-Math.log(A.w))*f);
   var ppu=W/1000;
-  var s=window.innerHeight/(z*ppu);
+  var s=Math.min(window.innerHeight/(z*ppu), window.innerWidth*.965/(w*ppu));
   var tx=window.innerWidth/2-cx*ppu*s;
   var ty=window.innerHeight/2-cy*ppu*s;
   svg.style.transform='translate3d('+tx.toFixed(2)+'px,'+ty.toFixed(2)+'px,0) scale('+s.toFixed(4)+')';
