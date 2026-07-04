@@ -959,7 +959,7 @@ var W;
 function layout(){
   W=Math.min(window.innerWidth,980);
   svg.style.width=W+'px';
-  spacer.style.height=Math.round(window.innerHeight*8.09)+'px'; /* 8.09 ≈ 5φ */
+  spacer.style.height=Math.round(window.innerHeight*4.6)+'px';
 }
 layout();
 var target=0,p=0,lastP=0,tilt=0,DAMP=1/(PHI*PHI); /* .382 */
@@ -976,7 +976,7 @@ window.addEventListener('resize',function(){
 function ease(x){return x*x*(3-2*x)}
 function frame(){
   requestAnimationFrame(frame);
-  p+=(target-p)*DAMP*.35;
+  p+=(target-p)*DAMP*.72;
   if(Math.abs(target-p)<.00003)p=target;
   var n=STOPS.length-1, seg=Math.min(p*n,n-.0001), i=Math.floor(seg), f=ease(seg-i);
   var A=STOPS[i],B=STOPS[i+1];
