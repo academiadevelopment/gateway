@@ -36,6 +36,16 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   body{display:flex;justify-content:center;background-color:#0A1322;
     background-image:radial-gradient(110rem 110rem at 50% 38%, #0F1F31 0%, #0A1322 70%);
     background-size:100% 100%;background-attachment:fixed}
+  /* the cuadriculado — the whole viewport is the graph paper; a crossing sits at dead center */
+  body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+    background-image:linear-gradient(rgba(135,175,225,.085) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(135,175,225,.085) 1px,transparent 1px);
+    background-size:40px 40px;background-position:calc(50% - 20px) calc(50% - 20px)}
+  /* instant tooltips — every door announces itself with zero delay */
+  #tip{position:fixed;z-index:12;pointer-events:none;opacity:0;transition:opacity .12s;
+    font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;color:#EEF3FA;
+    background:rgba(13,25,42,.95);border:1px solid rgba(192,133,82,.55);border-radius:8px;
+    padding:8px 12px;max-width:320px;line-height:1.5;backdrop-filter:blur(4px)}
   #plate{width:min(100vw,980px);height:auto;display:block}
   .disp{font-family:'Azonix','Arial Narrow',sans-serif}
   .mono{font-family:'IBM Plex Mono','SF Mono',Menlo,monospace}
@@ -157,8 +167,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </filter>
   </defs>
 
-  <!-- the cuadriculado — 40px sacred unit, lines pass through the aether center (500,700); rings at 3u · 6u · 9u -->
-  <rect x="0" y="0" width="1000" height="1618" fill="url(#grid40)"/>
+  <!-- the cuadriculado now covers the entire viewport (body layer) — a crossing registers at dead center -->
+
 
   <!-- drifting motes -->
   <g fill="#EEF3FA">
@@ -963,12 +973,27 @@ function layout(){
 }
 layout();
 var target=0,p=0,lastP=0,tilt=0,DAMP=1/(PHI*PHI); /* .382 */
+var lastMove=performance.now(),settling=false;
 function onScroll(){
   var m=Math.max(document.documentElement.scrollHeight-window.innerHeight,1);
   target=Math.min(window.scrollY/m,1);
   if(window.scrollY>40)hint.style.opacity='0';
 }
 window.addEventListener('scroll',onScroll,{passive:true});onScroll();
+window.addEventListener('wheel',function(){lastMove=performance.now();settling=false;},{passive:true});
+window.addEventListener('touchmove',function(){lastMove=performance.now();settling=false;},{passive:true});
+/* keyboard flight: arrows step between stations */
+window.addEventListener('keydown',function(e){
+  var d=0;
+  if(e.key==='ArrowDown'||e.key==='ArrowRight')d=1;
+  else if(e.key==='ArrowUp'||e.key==='ArrowLeft')d=-1;
+  else return;
+  e.preventDefault();
+  var n=STOPS.length-1;
+  var cur=Math.round(target*n)+d;cur=Math.max(0,Math.min(cur,n));
+  var m=Math.max(document.documentElement.scrollHeight-window.innerHeight,1);
+  settling=true;window.scrollTo({top:cur/n*m,behavior:'smooth'});
+});
 window.addEventListener('resize',function(){
   if(window.innerWidth<700){location.reload();return;}
   layout();onScroll();
@@ -991,11 +1016,56 @@ function frame(){
   var v=(p-lastP);lastP=p;
   tilt+=((Math.max(Math.min(v*260,1.6),-1.6))-tilt)*.06;
   cam.style.transform='perspective(1600px) rotateX('+tilt.toFixed(3)+'deg)';
-  /* index light */
+  /* index light + station analytics */
   var near=Math.round(p*n);if(near>=jbtns.length)near=jbtns.length-1;
   for(var k=0;k<jbtns.length;k++)jbtns[k].classList.toggle('on',k===near);
+  if(near!==frame.lastNear&&Math.abs(target-p)<.01){
+    frame.lastNear=near;
+    window.dataLayer=window.dataLayer||[];
+    window.dataLayer.push({event:'gateway_station',station:STOPS[near].l});
+  }
+  /* soft settle: after the wheel rests, glide to the nearest station — the wheel always wins */
+  if(!settling&&performance.now()-lastMove>750&&Math.abs(target-p)<.002){
+    var nr=Math.round(target*n)/n, gap=Math.abs(target-nr);
+    if(gap>.004&&gap<.06){
+      settling=true;
+      var m=Math.max(document.documentElement.scrollHeight-window.innerHeight,1);
+      window.scrollTo({top:nr*m,behavior:'smooth'});
+    }
+  }
 }
 requestAnimationFrame(frame);
+})();
+/* ---- interaction layer: instant tooltips + door analytics (all devices) ---- */
+(function(){
+'use strict';
+var tip=document.createElement('div');tip.id='tip';document.body.appendChild(tip);
+var fine=window.matchMedia&&window.matchMedia('(pointer:fine)').matches;
+if(fine){
+  document.addEventListener('mouseover',function(e){
+    var a=e.target.closest&&e.target.closest('a');
+    if(!a||!a.closest('svg')){tip.style.opacity='0';return;}
+    var t=a.getAttribute('data-tip');
+    if(!t){var tl=a.querySelector('title');
+      if(tl){t=tl.textContent;a.setAttribute('data-tip',t);a.setAttribute('aria-label',t);tl.parentNode.removeChild(tl);}}
+    if(t){tip.textContent=t;tip.style.opacity='1';}
+  });
+  document.addEventListener('mousemove',function(e){
+    var x=Math.min(e.clientX+16,window.innerWidth-340),y=Math.min(e.clientY+18,window.innerHeight-60);
+    tip.style.left=x+'px';tip.style.top=y+'px';
+  },{passive:true});
+  document.addEventListener('mouseout',function(e){
+    if(e.target.closest&&e.target.closest('a'))tip.style.opacity='0';
+  });
+}
+/* every door click reports to GTM — with thousands of visitors, this is the map of demand */
+document.addEventListener('click',function(e){
+  var a=e.target.closest&&e.target.closest('a[href]');if(!a)return;
+  window.dataLayer=window.dataLayer||[];
+  window.dataLayer.push({event:'gateway_door',
+    door:(a.getAttribute('data-tip')||a.getAttribute('aria-label')||(a.textContent||'').trim()||a.href).slice(0,80),
+    href:a.href});
+});
 })();
 </script>
 </body>
