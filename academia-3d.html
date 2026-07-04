@@ -544,10 +544,13 @@ function start(){
   if('requestIdleCallback' in window)requestIdleCallback(init,{timeout:1200});
   else setTimeout(init,300);
 }
-var ts=document.querySelector('script[src*="three.min.js"]');
-if(window.THREE)start();
-else if(ts){ts.addEventListener('load',start);ts.addEventListener('error',flat);}
-else flat();
+(function boot(){
+  if(window.THREE){start();return;}
+  var n=0,iv=setInterval(function(){
+    if(window.THREE){clearInterval(iv);start();}
+    else if(++n>120){clearInterval(iv);flat();}
+  },100);
+})();
 </script>
 </body>
 </html>
