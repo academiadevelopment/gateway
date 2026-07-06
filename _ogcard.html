@@ -1,0 +1,48 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+<link href="https://fonts.cdnfonts.com/css/azonix" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{width:1200px;height:630px;overflow:hidden}
+  body{
+    background-color:#0A1322;
+    background-image:
+      linear-gradient(rgba(135,175,225,.075) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(135,175,225,.075) 1px,transparent 1px),
+      radial-gradient(90rem 60rem at 50% 42%, #0F1F31 0%, #0A1322 72%);
+    background-size:40px 40px,40px 40px,100% 100%;
+    background-position:center center;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    font-family:'IBM Plex Mono',monospace;color:#EEF3FA;
+  }
+  .mark{width:132px;height:120px;margin-bottom:26px;filter:drop-shadow(0 8px 24px rgba(0,0,0,.5))}
+  .word{font-family:'Azonix','Arial Narrow',sans-serif;font-size:92px;letter-spacing:.14em;line-height:1;color:#F3F7FC;text-indent:.14em}
+  .strap{margin-top:22px;font-size:22px;letter-spacing:.42em;color:#E0A060;text-indent:.42em}
+  .geo{margin-top:14px;font-size:15px;letter-spacing:.34em;color:#9FB2C9;text-indent:.34em}
+  .pill{margin-top:34px;font-size:16px;letter-spacing:.24em;color:#CFE0F5;text-indent:.24em;
+    border:1px solid rgba(192,133,82,.6);border-radius:999px;padding:11px 26px;background:rgba(13,25,42,.6)}
+</style></head><body>
+  <svg class="mark" viewBox="0 0 200 182" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="fL" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#A9C6EE"/><stop offset="1" stop-color="#4C6C93"/>
+      </linearGradient>
+      <linearGradient id="fR" x1="1" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#6E8FB8"/><stop offset="1" stop-color="#25384F"/>
+      </linearGradient>
+      <linearGradient id="fB" x1="0" y1="1" x2="0" y2="0">
+        <stop offset="0" stop-color="#16283C"/><stop offset="1" stop-color="#37536F"/>
+      </linearGradient>
+    </defs>
+    <!-- tetrahedron: apex(100,8) baseL(14,172) baseR(186,172) center(100,116) -->
+    <polygon points="100,8 14,172 100,116" fill="url(#fL)"/>
+    <polygon points="100,8 186,172 100,116" fill="url(#fR)"/>
+    <polygon points="14,172 186,172 100,116" fill="url(#fB)"/>
+    <polygon points="100,8 14,172 186,172" fill="none" stroke="#B7D0EE" stroke-width="1.4" stroke-linejoin="round" opacity=".55"/>
+    <path d="M100,8 L100,116 M14,172 L100,116 M186,172 L100,116" stroke="#0A1322" stroke-width="1.2" opacity=".5"/>
+  </svg>
+  <div class="word">ACADEMIA</div>
+  <div class="strap">REAL ESTATE + CONSTRUCTION</div>
+  <div class="geo">MIAMI-DADE · BROWARD · PALM BEACH</div>
+  <div class="pill">THEACADEMIAGROUP.COM</div>
+</body></html>
