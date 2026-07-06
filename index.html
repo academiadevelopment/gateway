@@ -1141,5 +1141,9 @@ document.addEventListener('click',function(e){
 });
 })();
 </script>
+<script>
+/* Clean the address bar — strip OUR xsell UTM cruft after GTM has initialized (referrer keeps cross-domain attribution). */
+(function(){try{var p=new URLSearchParams(location.search);if((p.get('utm_medium')||'').indexOf('xsell')===0){['utm_source','utm_medium','utm_campaign','utm_content','utm_term'].forEach(function(k){p.delete(k);});var q=p.toString();history.replaceState(null,'',location.pathname+(q?'?'+q:'')+location.hash);}}catch(e){}})();
+</script>
 </body>
 </html>
