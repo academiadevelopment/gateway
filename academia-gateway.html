@@ -1034,6 +1034,16 @@ function onScroll(){
   if(window.scrollY>40)hint.style.opacity='0';
 }
 window.addEventListener('scroll',onScroll,{passive:true});onScroll();
+/* FIRST IMPRESSION — land on the composed CONSTRUCTION frame (STOP 4), not the zoomed-out top.
+   Up/down still travels the whole system from here; every entry to the hub lands on this view. */
+if('scrollRestoration' in history)history.scrollRestoration='manual';
+(function(){
+  var START=4; /* STOPS index: CONSTRUCTION — the money frame */
+  var m0=Math.max(document.documentElement.scrollHeight-window.innerHeight,1);
+  var p0=START/(STOPS.length-1);
+  window.scrollTo(0,Math.round(p0*m0));
+  target=p0;p=p0;lastP=p0;               /* set camera directly — no fly-in flash */
+})();
 window.addEventListener('wheel',function(){lastMove=performance.now();settling=false;},{passive:true});
 window.addEventListener('touchmove',function(){lastMove=performance.now();settling=false;},{passive:true});
 /* keyboard flight: arrows step between stations */
