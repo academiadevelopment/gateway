@@ -31,7 +31,22 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Encode+Sans+Expanded:wght@300;400;500&family=Playfair+Display:ital@0;1&family=Inter:wght@400&display=swap" rel="stylesheet">
 <link href="https://fonts.cdnfonts.com/css/azonix" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
+<script>
+/* Load three.js (the WebGL glass-solids enhancement) only on motion-OK desktop. On mobile
+   or prefers-reduced-motion the 2D wireframe marks are the built-in graceful fallback
+   (see the Timaeus layer: "no THREE / no WebGL -> the 2D wireframes keep running untouched").
+   Skips a ~580KB parse on mobile, where it dominated TBT. Desktop behaviour is unchanged. */
+(function(){
+  var mq = window.matchMedia;
+  if (!mq) return;
+  if (mq('(prefers-reduced-motion: reduce)').matches) return;
+  if (mq('(max-width: 899px)').matches) return;
+  var s = document.createElement('script');
+  s.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
+  s.defer = true;
+  document.head.appendChild(s);
+})();
+</script>
 <style>
   html{background:#0A1322}
   html,body{margin:0;padding:0;min-height:100vh;overflow-x:hidden}
