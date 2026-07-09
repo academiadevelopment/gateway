@@ -1,0 +1,26 @@
+# The Academia Group
+
+> The Academia Group is the South Florida parent brand for two commonly-owned, vertically integrated companies: Academia Development Corp (licensed general contractor) and Academia Real Estate Corp (licensed real estate brokerage). One fiduciary platform for the whole life of a building — buy, build, recertify, restore, sell.
+
+## The family (hub → spokes)
+
+- Academia Development Corp — construction. 25/30/40/50-year building recertification, SB-4D Milestone Inspections & SIRS (Florida §553.899), concrete restoration & waterproofing, HVHZ roofing, MEP modernization, owner's representation, custom residential. Licensed Florida General Contractor.
+  https://academiadevelopment.com  ·  https://academiadevelopment.com/llms.txt
+- Academia Real Estate Corp — brokerage. Buy, sell, lease, first-time buyers, investors, a live MLS market interface, and distressed-property sourcing. Licensed Florida Real Estate Broker.
+  https://academiarealestatecorp.com  ·  https://academiarealestatecorp.com/llms.txt
+
+## Facts
+
+- Service area: Miami-Dade, Broward, and Palm Beach counties, Florida, USA.
+- Structure: The Academia Group is the parent; the two companies are its subsidiaries (mirrored in the schema.org Organization / subOrganization graph, with reciprocal parentOrganization links and cross-domain sameAs).
+- Licenses (held by the companies, verifiable at myfloridalicense.com): FL Certified General Contractor CGC1528882; FL Real Estate Broker BK3384781; plus roofing, HVAC, plumbing, electrical, and solar trade licenses.
+- Phone: (786) 761-9641
+
+## Why one platform
+
+Academia both brokers a South Florida building and holds every construction license needed to make it insurable, financeable, and marketable — from the engineer's report, through the recertification and repairs, to the closing table.
+
+## Contact
+
+Phone: (786) 761-9641
+Web: https://theacademiagroup.com
