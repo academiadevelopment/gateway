@@ -68,10 +68,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   text[font-size="10"]{font-size:11px}text[font-size="10.5"]{font-size:11.5px}
   /* ---- mobile experience: native layout, plate is desktop-only ---- */
   #mobile{display:none}
-  @media (max-width:700px){
+  @media (max-width:700px), (pointer:coarse), (hover:none), (max-height:520px) and (orientation:landscape){
     #plate{display:block;width:100%;max-width:520px;margin:0 auto}
     body{display:block}
     .mhint{color:var(--annotation);text-align:center;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:2px;margin:2px 0 0;opacity:.8}
+    .mtb{display:flex;justify-content:space-between;gap:8px;font-family:'IBM Plex Mono',monospace;font-size:8.5px;letter-spacing:.14em;color:var(--annotation);border:1px solid var(--hairline);padding:8px 11px;margin:0 0 2px}
+    .mtb b{color:var(--ink);font-weight:400;letter-spacing:.2em}
+    .msec .msheet{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.18em;color:var(--copper);margin:0 0 7px;padding-bottom:5px;border-bottom:1px solid var(--hairline)}
     #mobile{display:block;padding:18px 16px 110px;max-width:520px;margin:0 auto;
       font-family:'IBM Plex Mono',monospace;color:#EEF3FA}
     .mhead{text-align:center;padding:14px 0 6px}
@@ -154,9 +157,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   #titleblock #tb-nm{color:var(--ink)}
   #titleblock .tb-meta{display:flex;align-items:center;gap:9px;margin-top:4px;opacity:.9}
   #titleblock svg{stroke:var(--annotation);fill:none;flex:none}
-  @media (max-width:700px){#titleblock{display:none}}
+  @media (max-width:700px), (pointer:coarse), (hover:none), (max-height:520px) and (orientation:landscape){#titleblock{display:none}}
   @media (prefers-reduced-motion: reduce){#titleblock{display:none}}
-  @media (max-width:700px){#journey,#travelhint{display:none}}
+  @media (max-width:700px), (pointer:coarse), (hover:none), (max-height:520px) and (orientation:landscape){#journey,#travelhint{display:none}}
   @media (prefers-reduced-motion: reduce){#journey,#travelhint{display:none}}
   .fade{opacity:0;animation:appear 1.1s ease forwards}
   /* Fibonacci cascade: 1 1 2 3 5 8 13 (÷10) */
@@ -664,7 +667,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </svg>
 
 <div id="mobile">
-  <div class="mhint">THE SYSTEM — ROTATE FOR THE FULL PLATE ⟳ · READABLE MENU BELOW ↓</div>
+  <div class="mtb"><span><b>THE ACADEMIA GROUP</b></span><span>DRAWING SET · REV 2</span></div>
   <div class="mhead">
     <img class="lockup" src="https://academiadevelopment.com/wp-content/uploads/2026/07/academia-lockup-white.png" alt="Academia">
     <div class="strap">REAL ESTATE + CONSTRUCTION</div>
@@ -676,7 +679,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
 
   <div class="msec">
-    <h2 style="color:#EEF3FA">ONE PLATFORM, END TO END</h2>
+    <div class="msheet">SHEET A-000 · COVER</div><h2 style="color:#EEF3FA">One Platform, End to End</h2>
     <div class="cap">The Academia Group is a South Florida platform of two commonly-owned, licensed companies.</div>
     <p style="color:#AEBFD4;font-size:13px;line-height:1.7;margin:12px 0 0;max-width:66ch">The Academia Group is the parent brand for <b style="color:#EEF3FA">Academia Development Corp</b>, a licensed Florida general contractor, and <b style="color:#EEF3FA">Academia Real Estate Corp</b>, a licensed Florida real-estate brokerage. Together they are one fiduciary platform for the whole life of a South Florida building — buy, build, recertify, restore, improve, protect, and sell.</p>
     <p style="color:#AEBFD4;font-size:13px;line-height:1.7;margin:10px 0 0;max-width:66ch">Academia is the rare operator that both brokers a building and holds every construction license needed to make it insurable, financeable, and marketable — from the engineer's report, through recertification and repairs, to the closing table. Serving Miami-Dade, Broward, and Palm Beach counties, Florida.</p>
@@ -688,7 +691,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
 
   <div class="msec cop">
-    <h2>CONSTRUCTION</h2>
+    <div class="msheet">SHEET A-100 · CONSTRUCTION</div><h2>Construction</h2>
     <div class="cap">One licensed operator — the whole building, the whole lifecycle.</div>
     <a class="mrow" href="https://academiadevelopment.com/recertification/"><b>RECERTIFICATION</b><span>25 · 30 · 40 · 50-YR</span></a>
     <a class="mrow" href="https://academiadevelopment.com/milestone-sirs/"><b>MILESTONE · SIRS</b><span>SB-4D · PHASE I / II</span></a>
@@ -701,7 +704,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
 
   <div class="msec stl">
-    <h2>BROKERAGE</h2>
+    <div class="msheet">SHEET RE-100 · BROKERAGE</div><h2>Brokerage</h2>
     <div class="cap">The fully equipped brokerage — buy, sell, improve, protect.</div>
     <a class="mrow" href="https://academiarealestatecorp.com/buy"><b>BUY</b><span>SEARCH · LIVE MLS</span></a>
     <a class="mrow" href="https://academiarealestatecorp.com/sell"><b>SELL · LEASE</b><span>LIST WITH US</span></a>
@@ -714,7 +717,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
 
   <div class="msec">
-    <h2 style="color:#EEF3FA">LICENSED &amp; VERIFIABLE</h2>
+    <div class="msheet">SHEET A-030 · LICENSURE</div><h2 style="color:#EEF3FA">Licensed &amp; Verifiable</h2>
     <div class="cap">Seven Florida credentials — tap any number to verify at MyFloridaLicense.com.</div>
     <div class="mlic">
       <a href="https://www.myfloridalicense.com/LicenseDetail.asp?SID=&amp;id=48556A9D9DC476A7B69DFE536C3B7BE2"><b>BROKER</b><span>BK3384781</span></a>
@@ -729,7 +732,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
 
   <div class="msec">
-    <h2 style="color:#EEF3FA">THE LIFECYCLE</h2>
+    <div class="msheet">SHEET A-010 · LIFECYCLE</div><h2 style="color:#EEF3FA">The Lifecycle</h2>
     <div class="cap">One operator, end to end.</div>
     <div class="mlife">
       <a href="https://academiadevelopment.com/custom-residential/">BUILD</a>
@@ -743,7 +746,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
 
   <div class="msec">
-    <h2 style="color:#EEF3FA">INDEPENDENTLY VERIFIED</h2>
+    <div class="msheet">SHEET A-900 · SEAL</div><h2 style="color:#EEF3FA">Independently Verified</h2>
     <div class="mtrust" style="margin-top:12px">
       <a href="https://www.houzz.com/professionals/general-contractors/academia-development-pfvwus-pf~1481835119">★ 5.0 HOUZZ</a>
       <a href="https://www.bbb.org/us/fl/doral/profile/construction-services/academia-development-corp-0633-90610125">BBB RATING A</a>
@@ -754,7 +757,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
 
   <div class="msec">
-    <h2 style="color:#EEF3FA">FREQUENTLY ASKED</h2>
+    <div class="msheet">SHEET A-020 · NOTES</div><h2 style="color:#EEF3FA">Frequently Asked</h2>
     <div class="mfaq" style="margin-top:10px">
       <details style="border-top:1px solid rgba(140,180,230,.18);padding:11px 0"><summary style="cursor:pointer;color:#EEF3FA;font-size:13px;font-weight:600">What is The Academia Group?</summary><p style="color:#AEBFD4;font-size:12.5px;line-height:1.65;margin:8px 0 0;max-width:66ch">The Academia Group is a South Florida parent brand for two commonly-owned, vertically integrated companies: Academia Development Corp, a licensed Florida general contractor, and Academia Real Estate Corp, a licensed Florida real-estate brokerage. One platform handles a building's whole lifecycle — buy, build, recertify, restore, improve, protect, and sell.</p></details>
       <details style="border-top:1px solid rgba(140,180,230,.18);padding:11px 0"><summary style="cursor:pointer;color:#EEF3FA;font-size:13px;font-weight:600">Does Academia both build and broker?</summary><p style="color:#AEBFD4;font-size:12.5px;line-height:1.65;margin:8px 0 0;max-width:66ch">Yes. Academia Real Estate Corp brokers the transaction and Academia Development Corp performs the construction, under common ownership — so a single operator can list, sell, renovate, recertify, and restore a South Florida property without handing it off between firms.</p></details>
@@ -1055,7 +1058,7 @@ if(!reduced&&!mobile)start();
 (function(){
 'use strict';
 var reduced=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-if(reduced||window.innerWidth<700||(window.matchMedia&&window.matchMedia('(pointer:coarse)').matches))return;   /* touch (phones, any orientation) & reduced get the static readable plate — camera fit misbehaves on short landscape viewports */
+if(reduced||window.innerWidth<700||window.innerHeight<520||(window.matchMedia&&(window.matchMedia('(pointer:coarse)').matches||window.matchMedia('(hover:none)').matches)))return;   /* touch / no-hover / short viewport (phones any orientation) & reduced get the static readable plate — the camera fit misbehaves on short landscape viewports */
 var PHI=(1+Math.sqrt(5))/2;
 var svg=document.getElementById('plate'); if(!svg)return;
 /* wrap the plate in a fixed camera stage */
