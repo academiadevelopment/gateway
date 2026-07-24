@@ -160,6 +160,15 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   #journey button.on .js,#journey button.on .jl{color:var(--copper)}
   #journey button.on .jd{background:var(--copper);border-color:var(--copper)}
   #travelhint{position:fixed;bottom:15px;left:50%;transform:translateX(-50%);z-index:6;font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.3em;color:var(--annotation);opacity:.7;transition:opacity .8s;pointer-events:none}
+  #titleblock{position:fixed;left:16px;bottom:16px;z-index:6;font-family:'IBM Plex Mono',monospace;background:rgba(16,27,46,.82);border:1px solid var(--hairline);padding:9px 12px;backdrop-filter:blur(4px);font-size:8.5px;letter-spacing:.1em;color:var(--annotation);line-height:1.75;max-width:236px;pointer-events:none}
+  #titleblock .tb-firm{color:var(--ink);letter-spacing:.2em;font-size:9px;margin-bottom:2px}
+  #titleblock .tb-k{opacity:.65}
+  #titleblock #tb-no{color:var(--copper);letter-spacing:.14em}
+  #titleblock #tb-nm{color:var(--ink)}
+  #titleblock .tb-meta{display:flex;align-items:center;gap:9px;margin-top:4px;opacity:.9}
+  #titleblock svg{stroke:var(--annotation);fill:none;flex:none}
+  @media (max-width:700px){#titleblock{display:none}}
+  @media (prefers-reduced-motion: reduce){#titleblock{display:none}}
   @media (max-width:700px){#journey,#travelhint{display:none}}
   @media (prefers-reduced-motion: reduce){#journey,#travelhint{display:none}}
   .fade{opacity:0;animation:appear 1.1s ease forwards}
@@ -1063,6 +1072,15 @@ svg.parentNode.insertBefore(cam,svg);cam.appendChild(svg);
 var spacer=document.createElement('div');spacer.id='camspacer';document.body.appendChild(spacer);
 var hint=document.createElement('div');hint.id='travelhint';hint.textContent='SCROLL — TRAVEL THE SYSTEM';document.body.appendChild(hint);
 var ring1=document.getElementById('ring1'),ring2=document.getElementById('ring2'),ring3=document.getElementById('ring3');
+var tb=document.createElement('div');tb.id='titleblock';tb.setAttribute('aria-hidden','true');
+tb.innerHTML='<div class="tb-firm">THE ACADEMIA GROUP</div>'
+  +'<div><span class="tb-k">SHEET</span> <span id="tb-no">A-000</span> &#183; <span id="tb-nm">COVER</span></div>'
+  +'<div class="tb-meta">'
+  +'<svg width="52" height="6" viewBox="0 0 52 6"><line x1="0" y1="3" x2="52" y2="3"/><line x1="0" y1="1" x2="0" y2="5"/><line x1="17" y1="1.5" x2="17" y2="4.5"/><line x1="34" y1="1.5" x2="34" y2="4.5"/><line x1="52" y1="1" x2="52" y2="5"/></svg>'
+  +'<svg width="10" height="13" viewBox="0 0 10 13"><path d="M5 0 L9 11 L5 8 L1 11 Z"/></svg><span>N</span>'
+  +'<span>REV 2 &#183; 2026-07</span></div>';
+document.body.appendChild(tb);
+var tbNo=document.getElementById('tb-no'),tbNm=document.getElementById('tb-nm');
 /* the stations of the journey — regions of the plate, in its own coordinates (cy includes the +100 shift; z = SVG units visible vertically) */
 /* z = SVG units the viewport must show vertically · w = units it must show horizontally.
    The camera fits BOTH, so no station is ever cropped on any aspect ratio. */
@@ -1169,6 +1187,7 @@ function frame(){
   window.__wholeness=Math.max(0,1-distToWhole/1.35);
   for(var k=0;k<jbtns.length;k++)jbtns[k].classList.toggle('on',k===near);
   if(jbtns[near])jbtns[near].classList.add('seen');
+  if(tbNo&&near!==frame.lastTb){frame.lastTb=near;tbNo.textContent=STOPS[near].sheet;tbNm.textContent=STOPS[near].l;}
   if(near!==frame.lastNear&&Math.abs(target-p)<.01){
     frame.lastNear=near;
     window.dataLayer=window.dataLayer||[];
