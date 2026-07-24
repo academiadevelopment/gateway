@@ -1004,8 +1004,8 @@ function init(){
       m.node.rotation.x+=m.spx*dt;
       m.scale+=((m.hover?1.24:1)-m.scale)*.12;
       var whole=window.__wholeness||0;
-      m.escale+=((m.isCore?(1+whole*.55):1)-m.escale)*.06;
-      if(m.isCore){coreLight.intensity=whole*2.4;coreLight.position.copy(m.node.position);coreLight.position.z=260;}
+      m.escale+=((m.isCore?(1+whole*.34):1)-m.escale)*.06;
+      if(m.isCore){coreLight.intensity=whole*1.5;coreLight.position.copy(m.node.position);coreLight.position.z=260;}
       var wantY=ptr.x*.45*(m.hover?1.5:1),wantX=-ptr.y*.45*(m.hover?1.5:1);
       var dY=(wantY-m.tY)*.12;m.tY+=dY;m.node.rotation.y+=dY;
       var dX=(wantX-m.tX)*.12;m.tX+=dX;m.node.rotation.x+=dX;
@@ -1155,7 +1155,7 @@ function frame(){
   /* wholeness: 0..1 proximity to either THE WHOLE stop (index 0 or n) - drives the
      WebGL core-nucleus hero boost (size + light) in the Timaeus dimensional layer script */
   var distToWhole=Math.min(Math.abs(p*n),Math.abs(p*n-n));
-  window.__wholeness=Math.max(0,1-distToWhole/1.15);
+  window.__wholeness=Math.max(0,1-distToWhole/1.35);
   for(var k=0;k<jbtns.length;k++)jbtns[k].classList.toggle('on',k===near);
   if(near!==frame.lastNear&&Math.abs(target-p)<.01){
     frame.lastNear=near;
