@@ -50,7 +50,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;color:#EEF3FA;
     background:rgba(13,25,42,.95);border:1px solid rgba(192,133,82,.55);border-radius:0;
     padding:8px 12px;max-width:320px;line-height:1.5;backdrop-filter:blur(4px)}
-  #plate{width:min(100vw,980px);height:auto;display:block}
+  #plate{width:min(100vw,980px);height:auto;display:block;margin:0 auto}
 :root{
     --field:#0A1322; --field-raised:#101B2E;
     --ink:#E8EDF4; --ink-max:#FFFFFF;
@@ -901,7 +901,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 (function(){
 'use strict';
 var reduced=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-var mobile=window.matchMedia&&window.matchMedia('(max-width: 899px)').matches;
+var mobile=window.matchMedia&&(window.matchMedia('(max-width: 899px)').matches||window.matchMedia('(pointer:coarse)').matches);
 var TAU=Math.PI*2;
 var THREE, RoomEnvironment;
 function init(){
@@ -1055,7 +1055,7 @@ if(!reduced&&!mobile)start();
 (function(){
 'use strict';
 var reduced=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-if(reduced||window.innerWidth<700)return;   /* mobile & reduced keep the approved experience */
+if(reduced||window.innerWidth<700||(window.matchMedia&&window.matchMedia('(pointer:coarse)').matches))return;   /* touch (phones, any orientation) & reduced get the static readable plate — camera fit misbehaves on short landscape viewports */
 var PHI=(1+Math.sqrt(5))/2;
 var svg=document.getElementById('plate'); if(!svg)return;
 /* wrap the plate in a fixed camera stage */
