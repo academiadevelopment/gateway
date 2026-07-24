@@ -126,7 +126,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   .relogo{filter:brightness(0) invert(1) opacity(.92)}
   a:hover .relogo{filter:brightness(0) invert(.82) sepia(.5) saturate(3) hue-rotate(-18deg)}
   .dia,.box,.lic{transform-box:fill-box;transform-origin:center}
-  a:hover .dia,a:hover .box{transform:scale(1.3)}
+  a:hover .dia,a:hover .box{transform:scale(1.3) translateY(-3px)}
   a:hover .lic{transform:scale(1.12)}
   a:active .dia,a:active .box,a:active .lic{transform:scale(.92)}
   .neon{fill:#7DE8FF}
@@ -340,7 +340,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <animate attributeName="stroke-dashoffset" from="12" to="0" dur="1.1s" repeatCount="indefinite"/>
   </g>
   <a href="https://academiarealestatecorp.com/about#whole"><title>Academia — General Contractor + Broker · 3 6 9 · the whole</title>
-    <circle id="hit-center" cx="500" cy="700" r="22" fill="#0F1F31" stroke="#C08552" stroke-width="2"/>
+    <circle id="hit-center" cx="500" cy="700" r="28" fill="#0F1F31" stroke="#C08552" stroke-width="2"/>
     <g id="solid-center" filter="url(#coreglow)"></g>
     <g><rect x="440" y="737" width="120" height="15" fill="#0A1322"/>
     <text x="500" y="748" class="mono cop" font-size="8" text-anchor="middle" letter-spacing="1.5">ACADEMIA — GENERAL CONTRACTOR + BROKER</text></g>
@@ -904,11 +904,11 @@ function init(){
   }catch(e){return;}
   var plate=document.getElementById('plate');
   var SPEC=[
-    {id:'solid-center',hit:'hit-center',kind:'dode', ratio:15.5/22, base:0xE0A060, hot:0xFFD9A0, spy:TAU/34, spx:TAU/55},
-    {id:'solid-fire',  hit:'hit-fire',  kind:'tetra',ratio:16/42,   base:0x9FB2C9, hot:0xE0A060, spy:TAU/21, spx:TAU/34},
-    {id:'solid-air',   hit:'hit-air',   kind:'octa', ratio:15/42,   base:0x9FB2C9, hot:0xE0A060, spy:-TAU/21,spx:TAU/55},
-    {id:'solid-water', hit:'hit-water', kind:'ico',  ratio:14.5/42, base:0x9FB2C9, hot:0xE0A060, spy:TAU/13, spx:-TAU/34},
-    {id:'solid-earth', hit:'hit-earth', kind:'cube', ratio:13.5/42, base:0x9FB2C9, hot:0xE0A060, spy:-TAU/13,spx:TAU/21}
+    {id:'solid-center',hit:'hit-center',kind:'dode', ratio:2.0, base:0xE0A060, hot:0xFFD9A0, spy:TAU/15, spx:TAU/24},
+    {id:'solid-fire',  hit:'hit-fire',  kind:'tetra',ratio:16/42,   base:0x9FB2C9, hot:0xE0A060, spy:TAU/9,  spx:TAU/15},
+    {id:'solid-air',   hit:'hit-air',   kind:'octa', ratio:15/42,   base:0x9FB2C9, hot:0xE0A060, spy:-TAU/9, spx:TAU/24},
+    {id:'solid-water', hit:'hit-water', kind:'ico',  ratio:14.5/42, base:0x9FB2C9, hot:0xE0A060, spy:TAU/6,  spx:-TAU/15},
+    {id:'solid-earth', hit:'hit-earth', kind:'cube', ratio:13.5/42, base:0x9FB2C9, hot:0xE0A060, spy:-TAU/6, spx:TAU/9}
   ];
   var ok=SPEC.every(function(s){return document.getElementById(s.id)&&document.getElementById(s.hit)});
   if(!ok||!plate){renderer.dispose&&renderer.dispose();return;}
@@ -928,6 +928,7 @@ function init(){
   var key=new THREE.DirectionalLight(0xF2EEE6,.85); key.position.set(-.45,.65,1); scene.add(key);
   var rim=new THREE.DirectionalLight(0x7FA3D0,.65); rim.position.set(.5,-.4,-.9); scene.add(rim);
   scene.add(new THREE.AmbientLight(0x33455F,.6));
+  var coreLight=new THREE.PointLight(0xFFD9A0,0,1400); scene.add(coreLight);
   function geoFor(kind){
     switch(kind){
       case 'dode': return new THREE.DodecahedronGeometry(1,0);
@@ -951,7 +952,7 @@ function init(){
     grp.rotation.set(.4+i*.7,.9+i*1.3,.15*i);
     scene.add(grp);
     var m={node:grp,edge:edgeMat,dot:dotMat,hitEl:document.getElementById(s.hit),
-      ratio:s.ratio,spy:s.spy,spx:s.spx,hover:false,scale:1,escale:.001,tY:0,tX:0,
+      ratio:s.ratio,spy:s.spy,spx:s.spx,hover:false,scale:1,escale:.001,tY:0,tX:0,isCore:s.id==='solid-center',
       cBase:new THREE.Color(s.base),cHot:new THREE.Color(s.hot),cCur:new THREE.Color(s.base)};
     var a=m.hitEl.closest&&m.hitEl.closest('a');
     if(a){
@@ -1002,10 +1003,12 @@ function init(){
       m.node.rotation.y+=m.spy*dt*(m.hover?1.8:1);
       m.node.rotation.x+=m.spx*dt;
       m.scale+=((m.hover?1.24:1)-m.scale)*.12;
-      m.escale+=(1-m.escale)*.05;
-      var wantY=ptr.x*.14*(m.hover?1.3:1),wantX=-ptr.y*.14*(m.hover?1.3:1);
-      var dY=(wantY-m.tY)*.07;m.tY+=dY;m.node.rotation.y+=dY;
-      var dX=(wantX-m.tX)*.07;m.tX+=dX;m.node.rotation.x+=dX;
+      var whole=window.__wholeness||0;
+      m.escale+=((m.isCore?(1+whole*.55):1)-m.escale)*.06;
+      if(m.isCore){coreLight.intensity=whole*2.4;coreLight.position.copy(m.node.position);coreLight.position.z=260;}
+      var wantY=ptr.x*.45*(m.hover?1.5:1),wantX=-ptr.y*.45*(m.hover?1.5:1);
+      var dY=(wantY-m.tY)*.12;m.tY+=dY;m.node.rotation.y+=dY;
+      var dX=(wantX-m.tX)*.12;m.tX+=dX;m.node.rotation.x+=dX;
       m.cCur.lerp(m.hover?m.cHot:m.cBase,.14);
       m.edge.color.copy(m.cCur);m.dot.color.copy(m.cCur);
     });
@@ -1015,6 +1018,7 @@ function init(){
   function still(){place();renderer.render(scene,camera);}
   if(reduced){
     marks.forEach(function(m){m.node.rotation.set(.5,.85,.1);m.escale=1;});
+    coreLight.intensity=0;
     still();
     window.addEventListener('scroll',still,{passive:true});
     return;
@@ -1136,18 +1140,22 @@ function frame(){
   svg.style.transform='translate3d('+tx.toFixed(2)+'px,'+ty.toFixed(2)+'px,0) scale('+s.toFixed(4)+')';
   /* a breath of bank while moving — decays to dead level at rest */
   var v=(p-lastP);lastP=p;
-  tilt+=((Math.max(Math.min(v*260,1.6),-1.6))-tilt)*.06;
+  tilt+=((Math.max(Math.min(v*420,4),-4))-tilt)*.09;
   cam.style.transform='perspective(1600px) rotateX('+tilt.toFixed(3)+'deg)';
   /* depth parallax: the three rings drift at different rates off the same tilt signal —
      a flat plate, but the layers read as sitting at different depths as the camera settles */
   if(ring1){
-    var pd=tilt*2.6;
-    ring1.setAttribute('transform','translate(0,100) translate('+(pd*.3).toFixed(2)+','+(pd*.16).toFixed(2)+')');
-    ring2.setAttribute('transform','translate(0,100) translate('+(pd*.55).toFixed(2)+','+(pd*.3).toFixed(2)+')');
-    ring3.setAttribute('transform','translate(0,100) translate('+(pd*.85).toFixed(2)+','+(pd*.45).toFixed(2)+')');
+    var pd=tilt*5.5;
+    ring1.setAttribute('transform','translate(0,100) translate('+(pd*.4).toFixed(2)+','+(pd*.22).toFixed(2)+')');
+    ring2.setAttribute('transform','translate(0,100) translate('+(pd*.85).toFixed(2)+','+(pd*.46).toFixed(2)+')');
+    ring3.setAttribute('transform','translate(0,100) translate('+(pd*1.4).toFixed(2)+','+(pd*.75).toFixed(2)+')');
   }
   /* index light + station analytics */
   var near=Math.round(p*n);if(near>=jbtns.length)near=jbtns.length-1;
+  /* wholeness: 0..1 proximity to either THE WHOLE stop (index 0 or n) - drives the
+     WebGL core-nucleus hero boost (size + light) in the Timaeus dimensional layer script */
+  var distToWhole=Math.min(Math.abs(p*n),Math.abs(p*n-n));
+  window.__wholeness=Math.max(0,1-distToWhole/1.15);
   for(var k=0;k<jbtns.length;k++)jbtns[k].classList.toggle('on',k===near);
   if(near!==frame.lastNear&&Math.abs(target-p)<.01){
     frame.lastNear=near;
