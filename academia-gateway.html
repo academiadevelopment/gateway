@@ -121,7 +121,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   a{cursor:pointer;text-decoration:none;-webkit-tap-highlight-color:transparent}
   a circle, a rect, a path, a line, a text, a image{transition:all .18s ease}
   a:hover text{fill:#E0A060 !important}
-  a:hover circle, a:hover rect.box, a:hover path.dia{stroke:#E0A060 !important;filter:drop-shadow(0 0 6px rgba(224,160,96,.55))}
+  a:hover circle, a:hover rect.box, a:hover path.dia{stroke:#E0A060 !important;filter:drop-shadow(0 0 6px rgba(224,160,96,.55)) drop-shadow(0 3px 5px rgba(4,10,20,.5))}
   a:hover line.tick{stroke:#E0A060}
   .relogo{filter:brightness(0) invert(1) opacity(.92)}
   a:hover .relogo{filter:brightness(0) invert(.82) sepia(.5) saturate(3) hue-rotate(-18deg)}
@@ -348,7 +348,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </g>
 
   <!-- ============ RING I (3 units) : LICENSURE — the ennead ============ -->
-  <g class="fade f2" transform="translate(0,100)">
+  <g id="ring1" class="fade f2" transform="translate(0,100)">
   <!-- the sacred triangle 9-3-6 -->
   <path d="M500 580 L603.9 760 L396.1 760 Z" fill="none" stroke="#C08552" stroke-width="1" opacity="0.5"/>
   <!-- the vortex doubling circuit 1→2→4→8→7→5→1 -->
@@ -400,7 +400,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </g>
 
   <!-- ============ RING II (6 units) : CONSTRUCTION — copper ============ -->
-  <g class="fade f3" transform="translate(0,100)">
+  <g id="ring2" class="fade f3" transform="translate(0,100)">
   <a href="https://academiadevelopment.com/real-estate/"><title>Real Estate &amp; Investment — brokerage · acquisitions</title>
     <path class="dia" d="M400.2 478.3 L408.2 470.3 L416.2 478.3 L408.2 486.3 Z" stroke="#E0A060" stroke-width="1.3" fill="none"/><circle cx="408.2" cy="478.3" r="2.2" fill="#E0A060"/>
     <text x="386.2" y="475.3" class="sans cream" font-size="13" text-anchor="end" letter-spacing="1.5">REAL ESTATE</text>
@@ -447,7 +447,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </g>
 
   <!-- ============ RING III (9 units) : BROKERAGE — steel ============ -->
-  <g class="fade f4" transform="translate(0,100)">
+  <g id="ring3" class="fade f4" transform="translate(0,100)">
   <a href="https://academiarealestatecorp.com/buy"><title>Buy — search live MLS · Miami-Dade · Broward · Palm Beach</title>
     <rect class="box" x="352.2" y="357.4" width="20" height="20" fill="#0F1F31" stroke="#7FA3D0" stroke-width="1.2"/>
     <text x="362.2" y="370.7" class="mono blue" font-size="8.5" text-anchor="middle" font-weight="600">BUY</text>
@@ -916,6 +916,13 @@ function init(){
   renderer.setSize(window.innerWidth,window.innerHeight);
   var el=renderer.domElement; el.id='gl'; el.setAttribute('aria-hidden','true');
   document.body.appendChild(el);
+  var ptr={x:0,y:0};
+  if(window.matchMedia&&window.matchMedia('(pointer:fine)').matches){
+    window.addEventListener('pointermove',function(e){
+      ptr.x=(e.clientX/window.innerWidth)*2-1;
+      ptr.y=(e.clientY/window.innerHeight)*2-1;
+    },{passive:true});
+  }
   var scene=new THREE.Scene();
   var camera=new THREE.OrthographicCamera(0,window.innerWidth,0,-window.innerHeight,-2000,2000);
   var key=new THREE.DirectionalLight(0xF2EEE6,.85); key.position.set(-.45,.65,1); scene.add(key);
@@ -944,7 +951,7 @@ function init(){
     grp.rotation.set(.4+i*.7,.9+i*1.3,.15*i);
     scene.add(grp);
     var m={node:grp,edge:edgeMat,dot:dotMat,hitEl:document.getElementById(s.hit),
-      ratio:s.ratio,spy:s.spy,spx:s.spx,hover:false,scale:1,
+      ratio:s.ratio,spy:s.spy,spx:s.spx,hover:false,scale:1,escale:.001,tY:0,tX:0,
       cBase:new THREE.Color(s.base),cHot:new THREE.Color(s.hot),cCur:new THREE.Color(s.base)};
     var a=m.hitEl.closest&&m.hitEl.closest('a');
     if(a){
@@ -972,7 +979,7 @@ function init(){
       m.node.visible=vis;
       if(!vis)return;
       m.node.position.set(r.left+r.width/2,-cy,0);
-      m.node.scale.setScalar(Math.max((r.width/2)*m.ratio*m.scale,.001));
+      m.node.scale.setScalar(Math.max((r.width/2)*m.ratio*m.scale*m.escale,.001));
     });
   }
   function onResize(){
@@ -995,6 +1002,10 @@ function init(){
       m.node.rotation.y+=m.spy*dt*(m.hover?1.8:1);
       m.node.rotation.x+=m.spx*dt;
       m.scale+=((m.hover?1.24:1)-m.scale)*.12;
+      m.escale+=(1-m.escale)*.05;
+      var wantY=ptr.x*.14*(m.hover?1.3:1),wantX=-ptr.y*.14*(m.hover?1.3:1);
+      var dY=(wantY-m.tY)*.07;m.tY+=dY;m.node.rotation.y+=dY;
+      var dX=(wantX-m.tX)*.07;m.tX+=dX;m.node.rotation.x+=dX;
       m.cCur.lerp(m.hover?m.cHot:m.cBase,.14);
       m.edge.color.copy(m.cCur);m.dot.color.copy(m.cCur);
     });
@@ -1003,7 +1014,7 @@ function init(){
   }
   function still(){place();renderer.render(scene,camera);}
   if(reduced){
-    marks.forEach(function(m){m.node.rotation.set(.5,.85,.1);});
+    marks.forEach(function(m){m.node.rotation.set(.5,.85,.1);m.escale=1;});
     still();
     window.addEventListener('scroll',still,{passive:true});
     return;
@@ -1037,6 +1048,7 @@ var cam=document.createElement('div');cam.id='cam';
 svg.parentNode.insertBefore(cam,svg);cam.appendChild(svg);
 var spacer=document.createElement('div');spacer.id='camspacer';document.body.appendChild(spacer);
 var hint=document.createElement('div');hint.id='travelhint';hint.textContent='SCROLL — TRAVEL THE SYSTEM';document.body.appendChild(hint);
+var ring1=document.getElementById('ring1'),ring2=document.getElementById('ring2'),ring3=document.getElementById('ring3');
 /* the stations of the journey — regions of the plate, in its own coordinates (cy includes the +100 shift; z = SVG units visible vertically) */
 /* z = SVG units the viewport must show vertically · w = units it must show horizontally.
    The camera fits BOTH, so no station is ever cropped on any aspect ratio. */
@@ -1126,6 +1138,14 @@ function frame(){
   var v=(p-lastP);lastP=p;
   tilt+=((Math.max(Math.min(v*260,1.6),-1.6))-tilt)*.06;
   cam.style.transform='perspective(1600px) rotateX('+tilt.toFixed(3)+'deg)';
+  /* depth parallax: the three rings drift at different rates off the same tilt signal —
+     a flat plate, but the layers read as sitting at different depths as the camera settles */
+  if(ring1){
+    var pd=tilt*2.6;
+    ring1.setAttribute('transform','translate(0,100) translate('+(pd*.3).toFixed(2)+','+(pd*.16).toFixed(2)+')');
+    ring2.setAttribute('transform','translate(0,100) translate('+(pd*.55).toFixed(2)+','+(pd*.3).toFixed(2)+')');
+    ring3.setAttribute('transform','translate(0,100) translate('+(pd*.85).toFixed(2)+','+(pd*.45).toFixed(2)+')');
+  }
   /* index light + station analytics */
   var near=Math.round(p*n);if(near>=jbtns.length)near=jbtns.length-1;
   for(var k=0;k<jbtns.length;k++)jbtns[k].classList.toggle('on',k===near);
