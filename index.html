@@ -61,9 +61,15 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   /* instant tooltips — every door announces itself with zero delay */
   #tip{position:fixed;z-index:12;pointer-events:none;opacity:0;transition:opacity .12s;
     font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;color:#EEF3FA;
-    background:rgba(13,25,42,.95);border:1px solid rgba(192,133,82,.55);border-radius:8px;
+    background:rgba(13,25,42,.95);border:1px solid rgba(192,133,82,.55);border-radius:0;
     padding:8px 12px;max-width:320px;line-height:1.5;backdrop-filter:blur(4px)}
   #plate{width:min(100vw,980px);height:auto;display:block}
+:root{
+    --field:#0A1322; --field-raised:#101B2E;
+    --ink:#E8EDF4; --ink-max:#FFFFFF;
+    --annotation:#8FA3BC; --hairline:#2A3A52;
+    --copper:#E0A060; --copper-dim:#A97845;
+  }
   .disp{font-family:'Azonix','Arial Narrow',sans-serif}
   .mono{font-family:'IBM Plex Mono','SF Mono',Menlo,monospace}
   .sans{font-family:'Encode Sans Expanded',Inter,sans-serif}
@@ -78,7 +84,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   @media (max-width:700px){
     #plate{display:block;width:100%;max-width:520px;margin:0 auto}
     body{display:block}
-    .mhint{color:#7DE8FF;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:2px;margin:2px 0 0;opacity:.8}
+    .mhint{color:var(--annotation);text-align:center;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:2px;margin:2px 0 0;opacity:.8}
     #mobile{display:block;padding:18px 16px 110px;max-width:520px;margin:0 auto;
       font-family:'IBM Plex Mono',monospace;color:#EEF3FA}
     .mhead{text-align:center;padding:14px 0 6px}
@@ -86,9 +92,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     .mhead .strap{color:#E0A060;font-size:13px;letter-spacing:3px;margin:0 0 5px}
     .mhead .cty{color:#AEBDD0;font-size:11px;letter-spacing:2px;margin:0 0 14px}
     .mcontact{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
-    .mcontact a{color:#E0A060;font-size:12px;letter-spacing:1px;text-decoration:none;border:1px solid #31465F;border-radius:999px;padding:9px 15px}
+    .mcontact a{color:#E0A060;font-size:12px;letter-spacing:1px;text-decoration:none;border:1px solid #31465F;border-radius:0;padding:9px 15px}
     .mdoors{display:grid;gap:10px;margin:18px 0 4px}
-    .mdoors a{display:block;text-align:center;font-size:13px;letter-spacing:1.5px;padding:16px 10px;border-radius:12px;text-decoration:none}
+    .mdoors a{display:block;text-align:center;font-size:13px;letter-spacing:1.5px;padding:16px 10px;border-radius:0;text-decoration:none}
     .mdoors .d1{color:#E0A060;border:1px solid #B87333;background:rgba(224,160,96,.07)}
     .mdoors .d2{color:#A9C6EE;border:1px solid #7FA3D0;background:rgba(127,163,208,.07)}
     .msec{margin-top:28px}
@@ -96,20 +102,20 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     .msec.cop h2{color:#E0A060}.msec.stl h2{color:#A9C6EE}
     .msec .cap{color:#AEBDD0;font-size:11px;letter-spacing:1.5px;margin:0 0 12px}
     .mrow{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 12px;
-      border:1px solid #223349;border-radius:10px;margin-bottom:8px;text-decoration:none;background:rgba(16,31,51,.5)}
+      border:1px solid #223349;border-radius:0;margin-bottom:8px;text-decoration:none;background:rgba(16,31,51,.5)}
     .mrow b{color:#EEF3FA;font-size:14px;letter-spacing:1px;font-weight:600}
     .mrow span{color:#AEBDD0;font-size:10.5px;letter-spacing:.5px;text-align:right}
     .msec.cop .mrow{border-left:2px solid #B87333}
     .msec.stl .mrow{border-left:2px solid #7FA3D0}
     .mlic{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-    .mlic a{display:block;border:1px solid #31465F;border-radius:10px;padding:11px 10px;text-decoration:none;text-align:center;background:rgba(16,31,51,.5)}
+    .mlic a{display:block;border:1px solid #31465F;border-radius:0;padding:11px 10px;text-decoration:none;text-align:center;background:rgba(16,31,51,.5)}
     .mlic b{display:block;color:#E0A060;font-size:12.5px;letter-spacing:1px;margin-bottom:2px}
     .mlic span{color:#AEBDD0;font-size:10.5px}
     .mlife{display:flex;flex-wrap:wrap;gap:6px}
-    .mlife a{color:#AEBDD0;font-size:11px;letter-spacing:1px;text-decoration:none;border:1px solid #223349;border-radius:999px;padding:9px 13px}
+    .mlife a{color:#AEBDD0;font-size:11px;letter-spacing:1px;text-decoration:none;border:1px solid #223349;border-radius:0;padding:9px 13px}
     .mlife a:last-child{color:#E0A060;border-color:#B87333}
     .mtrust{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
-    .mtrust a{color:#EEF3FA;font-size:11px;letter-spacing:1px;text-decoration:none;border:1px solid #223349;border-radius:999px;padding:9px 13px;opacity:.92}
+    .mtrust a{color:#EEF3FA;font-size:11px;letter-spacing:1px;text-decoration:none;border:1px solid #223349;border-radius:0;padding:9px 13px;opacity:.92}
     .mfoot{text-align:center;margin-top:32px}
     .mfoot .tbrand{display:block;font-family:'Azonix','Arial Narrow',sans-serif;font-size:21px;letter-spacing:7px;text-indent:7px;color:#EEF3FA;text-decoration:none;margin:14px 0 0}
     .mfoot .tbrand span{display:block;font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:4px;color:#AEBDD0;margin-top:5px}
@@ -119,6 +125,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   .hair{stroke:#31465F}.hair2{stroke:#1E2F44}
   text{letter-spacing:.5px}
   a{cursor:pointer;text-decoration:none;-webkit-tap-highlight-color:transparent}
+  a:focus-visible,button:focus-visible{outline:2px solid var(--copper);outline-offset:3px;border-radius:0}
   a circle, a rect, a path, a line, a text, a image{transition:all .18s ease}
   a:hover text{fill:#E0A060 !important}
   a:hover circle, a:hover rect.box, a:hover path.dia{stroke:#E0A060 !important;filter:drop-shadow(0 0 6px rgba(224,160,96,.55)) drop-shadow(0 3px 5px rgba(4,10,20,.5))}
@@ -129,14 +136,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   a:hover .dia,a:hover .box{transform:scale(1.3) translateY(-3px)}
   a:hover .lic{transform:scale(1.12)}
   a:active .dia,a:active .box,a:active .lic{transform:scale(.92)}
-  .neon{fill:#7DE8FF}
+  .neon{fill:var(--annotation)}
   .ctabtn rect{transition:all .2s ease}
-  .ctabtn:hover rect{stroke:#B7F2FF;fill:#12283E}
-  .ctabtn:hover text{fill:#B7F2FF !important}
+  .ctabtn:hover rect{stroke:var(--copper);fill:#12283E}
+  .ctabtn:hover text{fill:var(--copper) !important}
   .ctabtn:active rect{transform:scale(.97);transform-box:fill-box;transform-origin:center}
-  .stickycta{position:fixed;right:16px;bottom:16px;z-index:9;font-family:'IBM Plex Mono',monospace;font-size:12.5px;letter-spacing:.08em;color:#7DE8FF;background:rgba(14,29,46,.92);border:1px solid #7DE8FF;padding:13px 20px;border-radius:999px;text-decoration:none;backdrop-filter:blur(6px);box-shadow:0 0 14px rgba(125,232,255,.35),0 0 34px rgba(125,232,255,.15);animation:ctapulse 3.2s ease-in-out infinite}
-  .stickycta:hover{color:#0A1322;background:#7DE8FF;box-shadow:0 0 26px rgba(125,232,255,.75)}
-  @keyframes ctapulse{50%{box-shadow:0 0 24px rgba(125,232,255,.6),0 0 48px rgba(125,232,255,.28)}}
+  .stickycta{position:fixed;right:16px;bottom:16px;z-index:9;font-family:'IBM Plex Mono',monospace;font-size:12.5px;letter-spacing:.08em;color:var(--copper);background:rgba(14,29,46,.92);border:1px solid var(--copper);padding:13px 20px;border-radius:0;text-decoration:none;backdrop-filter:blur(6px)}
+  .stickycta:hover{color:var(--field);background:var(--copper)}
   @media (max-width:640px){.stickycta{left:16px;right:16px;text-align:center;font-size:13.5px;padding:15px 20px}}
   #gl{position:fixed;inset:0;z-index:2;pointer-events:none}
   /* ---- the travel: the plate is the world; scroll is the camera ---- */
@@ -147,9 +153,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   #journey button{display:flex;align-items:center;gap:9px;background:none;border:none;cursor:pointer;padding:2px;justify-content:flex-end}
   #journey .jl{font-family:'IBM Plex Mono',monospace;font-size:8.5px;letter-spacing:.22em;color:#AEBDD0;opacity:0;transform:translateX(6px);transition:opacity .2s,transform .2s;white-space:nowrap}
   #journey button:hover .jl,#journey button.on .jl{opacity:.95;transform:none}
-  #journey .jd{width:7px;height:7px;border-radius:50%;border:1px solid #7FA3D0;background:transparent;transition:all .25s;flex:none}
+  #journey .jd{width:7px;height:7px;border-radius:0;border:1px solid #7FA3D0;background:transparent;transition:all .25s;flex:none}
   #journey button.on .jd{background:#E0A060;border-color:#E0A060;box-shadow:0 0 8px rgba(224,160,96,.7)}
-  #travelhint{position:fixed;bottom:15px;left:50%;transform:translateX(-50%);z-index:6;font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.3em;color:#7DE8FF;opacity:.7;transition:opacity .8s;pointer-events:none}
+  #travelhint{position:fixed;bottom:15px;left:50%;transform:translateX(-50%);z-index:6;font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.3em;color:var(--annotation);opacity:.7;transition:opacity .8s;pointer-events:none}
   @media (max-width:700px){#journey,#travelhint{display:none}}
   @media (prefers-reduced-motion: reduce){#journey,#travelhint{display:none}}
   .fade{opacity:0;animation:appear 1.1s ease forwards}
@@ -301,7 +307,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <circle r="2.4" fill="#A9C6EE" opacity="0.8">
     <animateMotion dur="55s" repeatCount="indefinite" keyPoints="1;0" keyTimes="0;1" calcMode="linear" path="M500,340 a360,360 0 1,1 -0.1,0 z"/>
   </circle>
-  <circle r="2" fill="#7DE8FF" opacity="0.65">
+  <circle r="2" fill="#A9C6EE" opacity="0.65">
     <animateMotion dur="21s" repeatCount="indefinite" path="M500,580 a120,120 0 1,1 -0.1,0 z"/>
   </circle>
   <!-- structural ties removed — the φ spiral and core spokes carry the connection -->
@@ -638,10 +644,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   <!-- consultation button -->
   <a class="ctabtn" href="https://academiadevelopment.com/request-assessment/"><title>Request a consultation — we respond within one business day</title>
-    <rect x="348" y="1416" width="304" height="48" rx="24" fill="#0E1D2E" stroke="#7DE8FF" stroke-width="1.4" filter="url(#neon)">
+    <rect x="348" y="1416" width="304" height="48" rx="0" fill="#0E1D2E" stroke="#E0A060" stroke-width="1.4">
       <animate attributeName="stroke-opacity" values=".65;1;.65" dur="3.2s" repeatCount="indefinite"/>
     </rect>
-    <text x="500" y="1446" class="mono neon" font-size="13" text-anchor="middle" letter-spacing="2.5" font-weight="600">REQUEST A CONSULTATION →</text>
+    <text x="500" y="1446" class="mono cop" font-size="13" text-anchor="middle" letter-spacing="2.5" font-weight="600">REQUEST A CONSULTATION →</text>
   </a>
 
   <!-- contact — brought to the bottom -->
