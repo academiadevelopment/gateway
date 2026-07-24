@@ -151,10 +151,14 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   #camspacer{width:1px}
   #journey{position:fixed;right:16px;top:50%;transform:translateY(-50%);z-index:6;display:flex;flex-direction:column;gap:14px}
   #journey button{display:flex;align-items:center;gap:9px;background:none;border:none;cursor:pointer;padding:2px;justify-content:flex-end}
-  #journey .jl{font-family:'IBM Plex Mono',monospace;font-size:8.5px;letter-spacing:.22em;color:#AEBDD0;opacity:0;transform:translateX(6px);transition:opacity .2s,transform .2s;white-space:nowrap}
-  #journey button:hover .jl,#journey button.on .jl{opacity:.95;transform:none}
-  #journey .jd{width:7px;height:7px;border-radius:0;border:1px solid #7FA3D0;background:transparent;transition:all .25s;flex:none}
-  #journey button.on .jd{background:#E0A060;border-color:#E0A060;box-shadow:0 0 8px rgba(224,160,96,.7)}
+  #journey .js{font-family:'IBM Plex Mono',monospace;font-size:8.5px;letter-spacing:.1em;color:var(--annotation);transition:color .25s;white-space:nowrap}
+  #journey .jl{font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.16em;color:var(--annotation);opacity:0;max-width:0;overflow:hidden;transform:translateX(6px);transition:opacity .2s,transform .2s,max-width .2s,color .25s;white-space:nowrap}
+  #journey button:hover .jl,#journey button.on .jl{opacity:.9;max-width:130px;transform:none}
+  #journey .jd{width:7px;height:7px;border-radius:0;border:1px solid var(--annotation);background:transparent;transition:all .25s;flex:none}
+  #journey button.seen .js{color:var(--copper-dim)}
+  #journey button.seen .jd{border-color:var(--copper-dim)}
+  #journey button.on .js,#journey button.on .jl{color:var(--copper)}
+  #journey button.on .jd{background:var(--copper);border-color:var(--copper)}
   #travelhint{position:fixed;bottom:15px;left:50%;transform:translateX(-50%);z-index:6;font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.3em;color:var(--annotation);opacity:.7;transition:opacity .8s;pointer-events:none}
   @media (max-width:700px){#journey,#travelhint{display:none}}
   @media (prefers-reduced-motion: reduce){#journey,#travelhint{display:none}}
@@ -315,7 +319,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <!-- the φ spiral — from the aether to the threshold; drawn at runtime -->
   <g id="phihost" transform="translate(0,100)"></g>
 
-  <!-- CORE : ÆTHER -->
+  <!-- CORE : NUCLEUS -->
   <g stroke="#C08552" fill="none">
     <circle cx="500" cy="700" r="36" stroke-width="1" opacity="0.16">
       <animate attributeName="r" values="36;41;36" dur="7s" repeatCount="indefinite"/>
@@ -1063,21 +1067,22 @@ var ring1=document.getElementById('ring1'),ring2=document.getElementById('ring2'
 /* z = SVG units the viewport must show vertically · w = units it must show horizontally.
    The camera fits BOTH, so no station is ever cropped on any aspect ratio. */
 var STOPS=[
-  {l:'THE WHOLE',        cx:500,cy:809, z:1700,w:1020},
-  {l:'THE LIFECYCLE',    cx:500,cy:104, z:400, w:1020},
-  {l:'THE MARK',         cx:500,cy:283, z:360, w:700},
-  {l:'ÆTHER · LICENSURE',cx:500,cy:800, z:620, w:660},
-  {l:'CONSTRUCTION',     cx:500,cy:800, z:1030,w:1010},
-  {l:'BROKERAGE',        cx:500,cy:800, z:1310,w:1030},
-  {l:'THE SEAL',         cx:500,cy:1398,z:440, w:940},
-  {l:'THE WHOLE',        cx:500,cy:809, z:1700,w:1020}
+  {l:'COVER',        sheet:'A-000', cx:500,cy:809, z:1700,w:1020},
+  {l:'LIFECYCLE',    sheet:'A-010', cx:500,cy:104, z:400, w:1020},
+  {l:'THE MARK',     sheet:'A-020', cx:500,cy:283, z:360, w:700},
+  {l:'LICENSURE',    sheet:'A-030', cx:500,cy:800, z:620, w:660},
+  {l:'CONSTRUCTION', sheet:'A-100', cx:500,cy:800, z:1030,w:1010},
+  {l:'BROKERAGE',    sheet:'RE-100',cx:500,cy:800, z:1310,w:1030},
+  {l:'SEAL',         sheet:'A-900', cx:500,cy:1398,z:440, w:940},
+  {l:'COVER',        sheet:'A-000', cx:500,cy:809, z:1700,w:1020}
 ];
 var nav=document.createElement('nav');nav.id='journey';nav.setAttribute('aria-label','Journey');
 var jbtns=[];
 for(var i=0;i<STOPS.length-1;i++){
   (function(i){
     var b=document.createElement('button');
-    b.innerHTML='<span class="jl">'+STOPS[i].l+'</span><span class="jd"></span>';
+    b.innerHTML='<span class="js">'+STOPS[i].sheet+'</span><span class="jl">'+STOPS[i].l+'</span><span class="jd"></span>';
+    b.setAttribute('aria-label','Go to sheet '+STOPS[i].sheet+' — '+STOPS[i].l);
     b.addEventListener('click',function(){
       var m=Math.max(document.documentElement.scrollHeight-window.innerHeight,1);
       window.scrollTo({top:i/(STOPS.length-1)*m,behavior:'smooth'});
@@ -1163,10 +1168,11 @@ function frame(){
   var distToWhole=Math.min(Math.abs(p*n),Math.abs(p*n-n));
   window.__wholeness=Math.max(0,1-distToWhole/1.35);
   for(var k=0;k<jbtns.length;k++)jbtns[k].classList.toggle('on',k===near);
+  if(jbtns[near])jbtns[near].classList.add('seen');
   if(near!==frame.lastNear&&Math.abs(target-p)<.01){
     frame.lastNear=near;
     window.dataLayer=window.dataLayer||[];
-    window.dataLayer.push({event:'gateway_station',station:STOPS[near].l});
+    window.dataLayer.push({event:'gateway_station',station:STOPS[near].sheet+' '+STOPS[near].l});
   }
   /* the ouroboros: the end frames the same view as the beginning — rest a beat, then rebase
      invisibly to the top so the next scroll travels the system again */
