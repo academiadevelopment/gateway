@@ -196,6 +196,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   dialog#guides a.ac-g:hover,dialog#guides a.ac-g:focus-visible{border-color:#7FA3D0;background:#12253b;color:#EEF3FA;outline:none}
   dialog#guides a.ac-g span{font-size:9px;color:#7f93ab;letter-spacing:.12em;white-space:nowrap}
   @media(prefers-reduced-motion:reduce){dialog#guides a.ac-g{transition:none}}
+  /* fixed, always-reachable opener (desktop camera scrolls the familybar out of reach) */
+  #guidesfab{position:fixed;z-index:30;top:48px;right:16px;display:inline-flex;align-items:center;gap:6px;min-height:34px;padding:7px 12px;background:rgba(16,27,46,.9);border:1px solid #B87333;border-radius:4px;color:#E0A060;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;cursor:pointer;backdrop-filter:blur(4px)}
+  #guidesfab:hover,#guidesfab:focus-visible{color:#EEF3FA;border-color:#E0A060;outline:none}
+  @media(max-width:480px){#guidesfab{top:auto;bottom:16px;font-size:10px;padding:6px 10px}}
   /* construction-lines reveal — the hidden geometry, on demand (key G) */
   #constructionlines{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;opacity:0;transition:opacity .5s ease;z-index:4}
   body.blueprint #constructionlines{opacity:1}
@@ -1219,6 +1223,7 @@ layout();
 var target=0,p=0,lastP=0,tilt=0,DAMP=1/(PHI*PHI); /* .382 */
 var lastMove=performance.now(),settling=false;
 function onScroll(){
+  if(window.__guidesOpen)return;   /* guides dialog open: freeze the camera */
   var m=Math.max(document.documentElement.scrollHeight-window.innerHeight,1);
   target=Math.min(window.scrollY/m,1);
   if(window.scrollY>40)hint.style.opacity='0';
@@ -1238,6 +1243,7 @@ window.addEventListener('wheel',function(){lastMove=performance.now();settling=f
 window.addEventListener('touchmove',function(){lastMove=performance.now();settling=false;},{passive:true});
 /* keyboard flight: arrows step between stations */
 window.addEventListener('keydown',function(e){
+  if(window.__guidesOpen)return;   /* let the open guides dialog handle arrows/scroll */
   var d=0;
   if(e.key==='ArrowDown'||e.key==='ArrowRight')d=1;
   else if(e.key==='ArrowUp'||e.key==='ArrowLeft')d=-1;
@@ -1285,6 +1291,7 @@ function frame(){
      WebGL core-nucleus hero boost (size + light) in the Timaeus dimensional layer script */
   var distToWhole=Math.min(Math.abs(p*n),Math.abs(p*n-n));
   window.__wholeness=Math.max(0,1-distToWhole/1.35);
+  if(window.__guidesOpen)return;   /* dialog open: skip station light / hash rewrite / ouroboros rebase / settle */
   for(var k=0;k<jbtns.length;k++)jbtns[k].classList.toggle('on',k===near);
   if(jbtns[near])jbtns[near].classList.add('seen');
   if(tbNo&&near!==frame.lastTb){frame.lastTb=near;tbNo.textContent=STOPS[near].sheet;tbNm.textContent=STOPS[near].l;}
@@ -1362,6 +1369,7 @@ document.addEventListener('click',function(e){
 </script>
 
 <!-- Visual transformation guides — brokerage photographic guides, in a keyboard-accessible native dialog -->
+<a id="guidesfab" href="#guides" aria-haspopup="dialog" aria-controls="guides">&#9635; Visual guides</a>
 <dialog id="guides" aria-labelledby="guides-h">
   <div class="ac-gpanel">
     <button type="button" class="ac-gclose" aria-label="Close visual guides">&#10005;</button>
@@ -1391,20 +1399,23 @@ document.addEventListener('click',function(e){
    Uses the native <dialog> for focus trap, Escape and inert background. */
 (function(){
   var dlg=document.getElementById('guides');
+  if(!dlg)return;
   var opener=document.querySelector('.ac-fb-links a[href="#guides"]');
-  if(!dlg||!opener)return;
+  var fab=document.getElementById('guidesfab');
   function open(){
     if(dlg.open)return;
+    window.__guidesOpen=true;                              /* gates camera scroll/keys/hash */
     if(dlg.showModal){dlg.showModal();}else{dlg.setAttribute('open','');}
     document.documentElement.style.overflow='hidden';   /* freeze camera scroll */
   }
   function afterClose(){
-    document.documentElement.style.overflow='';          /* restore scroll/camera */
+    window.__guidesOpen=false;
+    document.documentElement.style.overflow='';          /* restore camera scroll/hash */
     if((location.hash||'').toLowerCase()==='#guides'){
       try{history.replaceState(null,'',location.pathname+location.search);}catch(e){}
     }
   }
-  opener.addEventListener('click',function(e){e.preventDefault();open();});
+  [opener,fab].forEach(function(el){ if(el)el.addEventListener('click',function(e){e.preventDefault();open();}); });
   dlg.addEventListener('click',function(e){if(e.target===dlg)dlg.close();}); /* backdrop */
   var x=dlg.querySelector('.ac-gclose'); if(x)x.addEventListener('click',function(){dlg.close();});
   dlg.addEventListener('close',afterClose);
