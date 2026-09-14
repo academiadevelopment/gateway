@@ -180,6 +180,26 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   .ac-fb-links a:hover,.ac-fb-links a:focus-visible{color:#EEF3FA}
   .ac-fb-links a[aria-current="page"]{color:#E0A060;border-bottom-color:#B87333}
   @media (max-width:480px){.ac-fb-brand{font-size:11px}.ac-fb-links a{font-size:10px;letter-spacing:.08em}}
+  /* Visual transformation guides — native <dialog> overlay (keyboard-accessible:
+     focus trap, Escape, focus-return, inert background). Kept OUT of the flow so
+     the desktop camera and mobile intro→service ordering are untouched. */
+  dialog#guides{padding:0;border:none;background:transparent;max-width:none;max-height:none;overflow:visible}
+  dialog#guides::backdrop{background:rgba(6,12,22,.86);backdrop-filter:blur(3px)}
+  dialog#guides .ac-gpanel{position:relative;width:min(720px,92vw);max-height:82vh;overflow:auto;margin:auto;background:#0A1322;border:1px solid #B87333;border-radius:6px;padding:clamp(22px,4vw,34px);box-sizing:border-box;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+  dialog#guides h2{font-family:'Fraunces','Playfair Display',Georgia,serif;font-weight:500;color:#EEF3FA;font-size:clamp(20px,3vw,26px);margin:0 0 6px;padding-right:52px;letter-spacing:.5px}
+  dialog#guides .ac-g-cap{color:#AEBDD0;font-size:12.5px;line-height:1.55;max-width:64ch;margin:0 0 18px}
+  .ac-gclose{position:absolute;top:10px;right:10px;width:44px;height:44px;background:none;border:1px solid var(--hairline);color:#AEBDD0;font-family:'IBM Plex Mono',monospace;font-size:15px;line-height:1;cursor:pointer;border-radius:3px}
+  .ac-gclose:hover,.ac-gclose:focus-visible{color:#EEF3FA;border-color:#B87333;outline:none}
+  dialog#guides .ac-g-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px}
+  dialog#guides .ac-g-grp{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.18em;color:#B87333;grid-column:1/-1;margin:12px 0 2px}
+  dialog#guides a.ac-g{display:flex;justify-content:space-between;align-items:center;gap:10px;min-height:44px;box-sizing:border-box;padding:11px 13px;background:#0F1F31;border:1px solid #1d3550;border-left:2px solid #7FA3D0;border-radius:3px;color:#DCE6F2;text-decoration:none;font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.04em;transition:border-color .15s ease,background .15s ease}
+  dialog#guides a.ac-g:hover,dialog#guides a.ac-g:focus-visible{border-color:#7FA3D0;background:#12253b;color:#EEF3FA;outline:none}
+  dialog#guides a.ac-g span{font-size:9px;color:#7f93ab;letter-spacing:.12em;white-space:nowrap}
+  @media(prefers-reduced-motion:reduce){dialog#guides a.ac-g{transition:none}}
+  /* fixed, always-reachable opener (desktop camera scrolls the familybar out of reach) */
+  #guidesfab{position:fixed;z-index:30;top:48px;right:16px;display:inline-flex;align-items:center;gap:6px;min-height:34px;padding:7px 12px;background:rgba(16,27,46,.9);border:1px solid #B87333;border-radius:4px;color:#E0A060;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;cursor:pointer;backdrop-filter:blur(4px)}
+  #guidesfab:hover,#guidesfab:focus-visible{color:#EEF3FA;border-color:#E0A060;outline:none}
+  @media(max-width:480px){#guidesfab{top:auto;bottom:16px;font-size:10px;padding:6px 10px}}
   /* construction-lines reveal — the hidden geometry, on demand (key G) */
   #constructionlines{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;opacity:0;transition:opacity .5s ease;z-index:4}
   body.blueprint #constructionlines{opacity:1}
@@ -256,6 +276,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <a href="https://academiadevelopment.com/" data-site="dev">Construction</a>
     <a href="https://academiarealestatecorp.com/" data-site="re">Real Estate</a>
     <a href="https://theacademiagroup.com/" data-site="group" aria-current="page">Group</a>
+    <a href="#guides">Visual guides</a>
   </div>
 </nav>
 <svg id="plate" viewBox="0 0 1000 1618" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" role="img" aria-label="Academia gateway — a golden rectangle · 3 6 9">
@@ -515,10 +536,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <text x="637.8" y="370.7" class="mono blue" font-size="8.5" text-anchor="middle" font-weight="600">SEL</text>
     <text x="665.8" y="370.7" class="mono dim" font-size="8.5" letter-spacing="0.8">SELL · LEASE</text>
   </a>
-  <a href="https://academiarealestatecorp.com/market"><title>The market, decoded — trends, price drops, new listings</title>
+  <a href="https://academiarealestatecorp.com/distressed-properties"><title>Distressed properties — a screened, broker-verified subset of the active MLS</title>
     <rect class="box" x="822.6" y="552.2" width="20" height="20" fill="#0F1F31" stroke="#7FA3D0" stroke-width="1.2"/>
-    <text x="832.6" y="565.5" class="mono blue" font-size="8.5" text-anchor="middle" font-weight="600">MKT</text>
-    <text x="860.6" y="565.5" class="mono dim" font-size="8.5" letter-spacing="0.8">TRENDS · DROPS</text>
+    <text x="832.6" y="565.5" class="mono blue" font-size="8.5" text-anchor="middle" font-weight="600">DST</text>
+    <text x="860.6" y="565.5" class="mono dim" font-size="8.5" letter-spacing="0.8">DISTRESSED · MLS</text>
   </a>
   <a href="https://academiarealestatecorp.com/investors"><title>Investors — value-add · house-hack · BRRRR</title>
     <rect class="box" x="822.6" y="827.8" width="20" height="20" fill="#0F1F31" stroke="#7FA3D0" stroke-width="1.2"/>
@@ -777,7 +798,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="cap">The fully equipped brokerage — buy, sell, improve, protect.</div>
     <a class="mrow" href="https://academiarealestatecorp.com/buy"><b>BUY</b><span>SEARCH · LIVE MLS</span></a>
     <a class="mrow" href="https://academiarealestatecorp.com/sell"><b>SELL · LEASE</b><span>LIST WITH US</span></a>
-    <a class="mrow" href="https://academiarealestatecorp.com/market"><b>THE MARKET</b><span>TRENDS · PRICE DROPS</span></a>
+    <a class="mrow" href="https://academiarealestatecorp.com/distressed-properties"><b>DISTRESSED PROPERTIES</b><span>SCREENED MLS SUBSET</span></a>
     <a class="mrow" href="https://academiarealestatecorp.com/investors"><b>INVESTORS</b><span>VALUE-ADD · BRRRR</span></a>
     <a class="mrow" href="https://academiarealestatecorp.com/improve"><b>HOME IMPROVEMENT</b><span>KITCHENS · BATHS</span></a>
     <a class="mrow" href="https://academiarealestatecorp.com/perform"><b>HOME PERFORMANCE</b><span>ROOF · MEP · WINDOWS</span></a>
@@ -1189,7 +1210,7 @@ document.body.appendChild(nav);
 /* deep-link routing: stable hash per sheet, browser-back walks the journey */
 function stopFromHash(){var h=(location.hash||'').replace('#','').toUpperCase();for(var i=0;i<STOPS.length-1;i++){if(STOPS[i].sheet===h)return i;}return -1;}
 function scrollToStop(idx,smooth){var m=Math.max(document.documentElement.scrollHeight-window.innerHeight,1);window.scrollTo({top:idx/(STOPS.length-1)*m,behavior:smooth?'smooth':'auto'});}
-window.addEventListener('hashchange',function(){var i=stopFromHash();if(i>=0)scrollToStop(i,true);});
+window.addEventListener('hashchange',function(){if(window.__guidesOpen)return;var i=stopFromHash();if(i>=0)scrollToStop(i,true);});
 window.addEventListener('keydown',function(e){if(e.key==='Escape'){var t=(e.target&&e.target.tagName||'').toLowerCase();if(t!=='input'&&t!=='textarea')scrollToStop(0,true);}});
 setTimeout(function(){var i=stopFromHash();if(i>0)scrollToStop(i,false);},350);
 var W;
@@ -1202,6 +1223,7 @@ layout();
 var target=0,p=0,lastP=0,tilt=0,DAMP=1/(PHI*PHI); /* .382 */
 var lastMove=performance.now(),settling=false;
 function onScroll(){
+  if(window.__guidesOpen)return;   /* guides dialog open: freeze the camera */
   var m=Math.max(document.documentElement.scrollHeight-window.innerHeight,1);
   target=Math.min(window.scrollY/m,1);
   if(window.scrollY>40)hint.style.opacity='0';
@@ -1221,6 +1243,7 @@ window.addEventListener('wheel',function(){lastMove=performance.now();settling=f
 window.addEventListener('touchmove',function(){lastMove=performance.now();settling=false;},{passive:true});
 /* keyboard flight: arrows step between stations */
 window.addEventListener('keydown',function(e){
+  if(window.__guidesOpen)return;   /* let the open guides dialog handle arrows/scroll */
   var d=0;
   if(e.key==='ArrowDown'||e.key==='ArrowRight')d=1;
   else if(e.key==='ArrowUp'||e.key==='ArrowLeft')d=-1;
@@ -1238,6 +1261,7 @@ window.addEventListener('resize',function(){
 function ease(x){return x*x*(3-2*x)}
 function frame(){
   requestAnimationFrame(frame);
+  if(window.__guidesOpen)return;   /* guides dialog open: hold the camera — skip interpolation, transforms, hash, rebase, settle */
   p+=(target-p)*DAMP*.72;
   if(Math.abs(target-p)<.00003)p=target;
   var n=STOPS.length-1, seg=Math.min(p*n,n-.0001), i=Math.floor(seg), f=ease(seg-i);
@@ -1341,6 +1365,63 @@ document.addEventListener('click',function(e){
     if((e.key==='g'||e.key==='G')&&tag(e.target)!=='input'&&tag(e.target)!=='textarea'){e.preventDefault();toggle();}
   });
   var b=document.getElementById('clbtn'); if(b)b.addEventListener('click',toggle);
+})();
+</script>
+
+<!-- Visual transformation guides — brokerage photographic guides, in a keyboard-accessible native dialog -->
+<a id="guidesfab" href="#guides" aria-haspopup="dialog" aria-controls="guides">&#9635; Visual guides</a>
+<dialog id="guides" aria-labelledby="guides-h">
+  <div class="ac-gpanel">
+    <button type="button" class="ac-gclose" aria-label="Close visual guides">&#10005;</button>
+    <h2 id="guides-h">Visual Transformation Guides</h2>
+    <p class="ac-g-cap">See each finished room or system, then scroll the same fixed-camera space back through before, demolition and build &mdash; and, where available, switch the finish package right on the photo. Illustrative concept visualizations on the brokerage site, not photographs of a specific completed project.</p>
+    <div class="ac-g-grid">
+      <div class="ac-g-grp">IMPROVE</div>
+      <a class="ac-g" href="https://academiarealestatecorp.com/improve/kitchens?via=theacademiagroup">Kitchens <span>GUIDE &rarr;</span></a>
+      <a class="ac-g" href="https://academiarealestatecorp.com/improve/bathrooms?via=theacademiagroup">Bathrooms <span>GUIDE &rarr;</span></a>
+      <a class="ac-g" href="https://academiarealestatecorp.com/improve/flooring?via=theacademiagroup">Flooring <span>GUIDE &rarr;</span></a>
+      <a class="ac-g" href="https://academiarealestatecorp.com/improve/finishes?via=theacademiagroup">Finishes <span>GUIDE &rarr;</span></a>
+      <div class="ac-g-grp">PERFORM &middot; where available</div>
+      <a class="ac-g" href="https://academiarealestatecorp.com/perform/roofing?via=theacademiagroup">Roofing <span>GUIDE &rarr;</span></a>
+      <a class="ac-g" href="https://academiarealestatecorp.com/perform/mechanical?via=theacademiagroup">HVAC &middot; Mechanical <span>GUIDE &rarr;</span></a>
+      <a class="ac-g" href="https://academiarealestatecorp.com/perform/electrical?via=theacademiagroup">Electrical <span>GUIDE &rarr;</span></a>
+      <a class="ac-g" href="https://academiarealestatecorp.com/perform/plumbing?via=theacademiagroup">Plumbing <span>GUIDE &rarr;</span></a>
+      <a class="ac-g" href="https://academiarealestatecorp.com/perform/windows?via=theacademiagroup">Windows <span>GUIDE &rarr;</span></a>
+      <a class="ac-g" href="https://academiarealestatecorp.com/perform/solar?via=theacademiagroup">Solar <span>GUIDE &rarr;</span></a>
+      <div class="ac-g-grp">POOLS</div>
+      <a class="ac-g" href="https://academiarealestatecorp.com/pools?via=theacademiagroup">Pools <span>GUIDE &rarr;</span></a>
+    </div>
+  </div>
+</dialog>
+<script>
+/* Guide directory dialog — opens over the camera, locks scroll (suspends the
+   camera pan + hash rewrite), restores camera/hash/scroll + focus on close.
+   Uses the native <dialog> for focus trap, Escape and inert background. */
+(function(){
+  var dlg=document.getElementById('guides');
+  if(!dlg)return;
+  var opener=document.querySelector('.ac-fb-links a[href="#guides"]');
+  var fab=document.getElementById('guidesfab');
+  function open(){
+    if(dlg.open)return;
+    window.__guidesOpen=true;                              /* gates camera scroll/keys/hash */
+    if(dlg.showModal){dlg.showModal();}else{dlg.setAttribute('open','');}
+    document.documentElement.style.overflow='hidden';   /* freeze camera scroll */
+  }
+  function afterClose(){
+    window.__guidesOpen=false;
+    document.documentElement.style.overflow='';          /* restore camera scroll/hash */
+    if((location.hash||'').toLowerCase()==='#guides'){
+      try{history.replaceState(null,'',location.pathname+location.search);}catch(e){}
+    }
+  }
+  [opener,fab].forEach(function(el){ if(el)el.addEventListener('click',function(e){e.preventDefault();open();}); });
+  dlg.addEventListener('click',function(e){if(e.target===dlg)dlg.close();}); /* backdrop */
+  var x=dlg.querySelector('.ac-gclose'); if(x)x.addEventListener('click',function(){dlg.close();});
+  dlg.addEventListener('close',afterClose);
+  /* keep the camera's global Escape handler (jump to first stop) from also firing */
+  window.addEventListener('keydown',function(e){if(e.key==='Escape'&&dlg.open){e.stopImmediatePropagation();}},true);
+  if((location.hash||'').toLowerCase()==='#guides')open();  /* deep link */
 })();
 </script>
 </body>
