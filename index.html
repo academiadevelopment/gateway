@@ -186,13 +186,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   dialog#guides{padding:0;border:none;background:transparent;max-width:none;max-height:none;overflow:visible}
   dialog#guides::backdrop{background:rgba(6,12,22,.86);backdrop-filter:blur(3px)}
   dialog#guides .ac-gpanel{position:relative;width:min(720px,92vw);max-height:82vh;overflow:auto;margin:auto;background:#0A1322;border:1px solid #B87333;border-radius:6px;padding:clamp(22px,4vw,34px);box-sizing:border-box;box-shadow:0 20px 60px rgba(0,0,0,.5)}
-  dialog#guides h2{font-family:'Fraunces','Playfair Display',Georgia,serif;font-weight:500;color:#EEF3FA;font-size:clamp(20px,3vw,26px);margin:0 0 6px;letter-spacing:.5px}
+  dialog#guides h2{font-family:'Fraunces','Playfair Display',Georgia,serif;font-weight:500;color:#EEF3FA;font-size:clamp(20px,3vw,26px);margin:0 0 6px;padding-right:52px;letter-spacing:.5px}
   dialog#guides .ac-g-cap{color:#AEBDD0;font-size:12.5px;line-height:1.55;max-width:64ch;margin:0 0 18px}
-  .ac-gclose{position:absolute;top:10px;right:12px;width:30px;height:30px;background:none;border:1px solid var(--hairline);color:#AEBDD0;font-family:'IBM Plex Mono',monospace;font-size:14px;line-height:1;cursor:pointer;border-radius:3px}
+  .ac-gclose{position:absolute;top:10px;right:10px;width:44px;height:44px;background:none;border:1px solid var(--hairline);color:#AEBDD0;font-family:'IBM Plex Mono',monospace;font-size:15px;line-height:1;cursor:pointer;border-radius:3px}
   .ac-gclose:hover,.ac-gclose:focus-visible{color:#EEF3FA;border-color:#B87333;outline:none}
   dialog#guides .ac-g-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px}
   dialog#guides .ac-g-grp{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.18em;color:#B87333;grid-column:1/-1;margin:12px 0 2px}
-  dialog#guides a.ac-g{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px 13px;background:#0F1F31;border:1px solid #1d3550;border-left:2px solid #7FA3D0;border-radius:3px;color:#DCE6F2;text-decoration:none;font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.04em;transition:border-color .15s ease,background .15s ease}
+  dialog#guides a.ac-g{display:flex;justify-content:space-between;align-items:center;gap:10px;min-height:44px;box-sizing:border-box;padding:11px 13px;background:#0F1F31;border:1px solid #1d3550;border-left:2px solid #7FA3D0;border-radius:3px;color:#DCE6F2;text-decoration:none;font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.04em;transition:border-color .15s ease,background .15s ease}
   dialog#guides a.ac-g:hover,dialog#guides a.ac-g:focus-visible{border-color:#7FA3D0;background:#12253b;color:#EEF3FA;outline:none}
   dialog#guides a.ac-g span{font-size:9px;color:#7f93ab;letter-spacing:.12em;white-space:nowrap}
   @media(prefers-reduced-motion:reduce){dialog#guides a.ac-g{transition:none}}
@@ -1210,7 +1210,7 @@ document.body.appendChild(nav);
 /* deep-link routing: stable hash per sheet, browser-back walks the journey */
 function stopFromHash(){var h=(location.hash||'').replace('#','').toUpperCase();for(var i=0;i<STOPS.length-1;i++){if(STOPS[i].sheet===h)return i;}return -1;}
 function scrollToStop(idx,smooth){var m=Math.max(document.documentElement.scrollHeight-window.innerHeight,1);window.scrollTo({top:idx/(STOPS.length-1)*m,behavior:smooth?'smooth':'auto'});}
-window.addEventListener('hashchange',function(){var i=stopFromHash();if(i>=0)scrollToStop(i,true);});
+window.addEventListener('hashchange',function(){if(window.__guidesOpen)return;var i=stopFromHash();if(i>=0)scrollToStop(i,true);});
 window.addEventListener('keydown',function(e){if(e.key==='Escape'){var t=(e.target&&e.target.tagName||'').toLowerCase();if(t!=='input'&&t!=='textarea')scrollToStop(0,true);}});
 setTimeout(function(){var i=stopFromHash();if(i>0)scrollToStop(i,false);},350);
 var W;
@@ -1261,6 +1261,7 @@ window.addEventListener('resize',function(){
 function ease(x){return x*x*(3-2*x)}
 function frame(){
   requestAnimationFrame(frame);
+  if(window.__guidesOpen)return;   /* guides dialog open: hold the camera — skip interpolation, transforms, hash, rebase, settle */
   p+=(target-p)*DAMP*.72;
   if(Math.abs(target-p)<.00003)p=target;
   var n=STOPS.length-1, seg=Math.min(p*n,n-.0001), i=Math.floor(seg), f=ease(seg-i);
@@ -1291,7 +1292,6 @@ function frame(){
      WebGL core-nucleus hero boost (size + light) in the Timaeus dimensional layer script */
   var distToWhole=Math.min(Math.abs(p*n),Math.abs(p*n-n));
   window.__wholeness=Math.max(0,1-distToWhole/1.35);
-  if(window.__guidesOpen)return;   /* dialog open: skip station light / hash rewrite / ouroboros rebase / settle */
   for(var k=0;k<jbtns.length;k++)jbtns[k].classList.toggle('on',k===near);
   if(jbtns[near])jbtns[near].classList.add('seen');
   if(tbNo&&near!==frame.lastTb){frame.lastTb=near;tbNo.textContent=STOPS[near].sheet;tbNm.textContent=STOPS[near].l;}
